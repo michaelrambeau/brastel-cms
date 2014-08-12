@@ -1,0 +1,84 @@
+doctype html
+html
+
+	//- HTML HEADER
+	head
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge")
+
+		title Brastel admin
+		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
+
+		//- Customise the stylesheet for your site by editing /public/styles/site.less
+		//- All .less files will be automatically compiled and minified in production.
+
+		link(href="/styles/site.min.css", rel="stylesheet")
+		link(href="/styles/admin/cpanel.css", rel="stylesheet")
+		
+		script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.min.js")
+		script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js")
+		script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js")
+
+	//- HTML BODY
+	body(ng-app="app")
+
+
+		//- HEADER
+		#header
+
+			div(role="navigation").navbar.navbar-default
+				.container-fluid
+					.navbar-header
+						button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+							span.sr-only Toggle navigation
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+						a.navbar-brand(href='/') brastel web site
+					.collapse.navbar-collapse
+						ul.nav.navbar-nav.navbar-left
+								li(ng-class="{active: $state.includes('items')}")
+									a(ui-sref="items") Items
+								li(ng-class="{active: $state.includes('keywords')}")
+									a(ui-sref="keywords") Keywords
+								li(ng-class="{active: $state.includes('blog')}")
+									a(ui-sref="blog") Message Board 
+								li(ng-class="{active: $state.includes('faq')}")
+									a(ui-sref="faq") FAQs 									
+																
+																							
+						ul.nav.navbar-nav.navbar-right
+							if user
+								if user.canAccessKeystone
+									li: a(href='/keystone') Open Keystone
+								li: a(href='/keystone/signout') Sign Out
+							else
+								li: a(href='/keystone/signin') Sign In
+
+		//- BODY
+		#body
+
+			//- The content block should contain the body of your template's content
+			block content
+
+
+		//- JAVASCRIPT
+
+		//- jQuery 1.11.1 is included by default, and required by both Bootstrap
+		//- and the KeystoneJS Content Editor. If you are not targeting IE8,
+		//- you can upgrade to 2.1.1 (also bundled) for better performance.
+		script(src='/js/lib/jquery/jquery-1.11.1.min.js')
+
+		//- Customise which Bootstrap javascript files are served by including
+		//- them specifically here, instead of bootstrap-3.2.0.min.js
+		script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
+
+		//- The KeystoneJS Content Editor provides support for ks-editable data attributes,
+		//- which generate links to edit content for users who can access Keystone
+		if user && user.canAccessKeystone
+			script(src='/keystone/js/content/editor.js')
+			
+		block js
+
+

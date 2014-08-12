@@ -1,0 +1,20 @@
+extends ../layouts/default
+
+mixin translation(cat, index, defaultTranslation)
+	- translate({cat: cat, index: index})
+	span(data-translation=cat + "/" + index, cat=cat, index=index)= defaultTranslation
+		
+block content
+	.container
+		h1=  templateData.title
+		p=  templateData.introduction
+		
+		
+		- for (var i=1;i<27;i++)
+			p
+				//+translation(63, i, 'My default translation')
+				+translation(74, i, 'My default translation')
+		
+		
+		
+		

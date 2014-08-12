@@ -1,0 +1,90 @@
+/**
+ * This file is where you define your application routes and controllers.
+ * 
+ * Start by including the middleware you want to run for every request;
+ * you can attach middleware to the pre('routes') and pre('render') events.
+ * 
+ * For simplicity, the default setup for route controllers is for each to be
+ * in its own file, and we import all the files in the /routes/views directory.
+ * 
+ * Each of these files is a route controller, and is responsible for all the
+ * processing that needs to happen for the route (e.g. loading data, handling
+ * form submissions, rendering the view template, etc).
+ * 
+ * Bind each route pattern your application should respond to in the function
+ * that is exported from this module, following the examples below.
+ * 
+ * See the Express application routing documentation for more information:
+ * http://expressjs.com/api.html#app.VERB
+ */
+
+var _ = require('underscore'),
+	keystone = require('keystone'),
+	middleware = require('./middleware'),
+	importRoutes = keystone.importer(__dirname);
+
+// Common Middleware
+keystone.pre('routes', middleware.initLocals);
+//keystone.pre('render', middleware.flashMessages);
+keystone.pre('render', middleware.postProcessView);
+
+// Import Route Controllers
+var routes = {
+	views: importRoutes('./views'),
+	api: importRoutes('./api'),	
+};
+
+// Setup Route Bindings
+exports = module.exports = function(app) {
+	
+	var express = keystone.express;
+	//var app = express();
+	var router = express.Router();
+	
+	// Views
+	app.get('/', routes.views.index);
+	app.get('/blog/:category?', routes.views.blog);
+	app.get('/blog/post/:post', routes.views.post);
+	app.get('/gallery', routes.views.gallery);
+	app.all('/contact', routes.views.contact);
+	app.all('/mail', routes.views.testmail);
+	
+	app.all(/^\/(eng|jpn)\/howitworks/i, function(req, res, next){
+		var re = /^\/(eng|jpn)/i;
+ 		if(re.test(req.url)){
+        var language = re.exec(req.url)[1];
+				app.use(express.cookieSession());
+				req.session.language = language;
+				routes.views.howitworks(req, res, next);
+		}
+	});
+	app.all(/^\/(eng|jpn)\/faq/i, function(req, res, next){
+		var re = /^\/(eng|jpn)/i;
+ 		if(re.test(req.url)){
+        var language = re.exec(req.url)[1];
+				app.use(express.cookieSession());
+				req.session.language = language;
+				console.log("FAQ route", language);
+				routes.views.faq(req, res, next);
+		}
+	});
+	
+	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
+	 app.all('/admin*', middleware.requireUser);
+	 app.all('/admin', routes.views.admin);
+	 app.all('/admin/items/*', routes.views.admin);
+	
+	
+
+	app.all('/api/:lang/faq', routes.api.faq);	
+	app.get('/api/item-categories', routes.api.itemCategories);	
+	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	
+	app.get('/api/items/:category_id/:index', routes.api.items);	
+	app.get('/api/languages', routes.api.languages);
+	
+	app.get('/api/blog/list/:language', keystone.initAPI, routes.api.blog.list);
+	app.get('/api/blog/:id', keystone.initAPI, routes.api.blog.get);
+	app.post('/api/blog/update/:id', keystone.initAPI, routes.api.blog.update);
+	
+	
+};

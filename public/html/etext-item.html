@@ -1,0 +1,152 @@
+<div class="panel panel-default etext-item" ng-controller="EtextItemController as item">
+	
+	<div class="navigation panel-heading">
+		<a style="" class="pull-left previous-item" href="#">
+			<span class="glyphicon glyphicon-chevron-left"><!----></span>
+		</a>
+		<a style="display:none;" class="pull-right next-item" href="#">
+			<span class="glyphicon glyphicon-chevron-right"><!----></span>
+		</a>
+		<div class="etext-item-id text-center">{{item.categoryTitle}} #{{item.index}}</div>
+	</div>
+	
+	<div class="panel-body2">
+		<div class="options">
+			<div class="row">
+				<div class="col-sm-4 text-left">
+					<!-- <a title="Click to see a link to access this item" class="link btn btn-default btn-xs" href="#">
+						<span class="glyphicon glyphicon-link"></span> Link
+					</a>-->
+					<a title="Click to display end of line characters (¶) in read-only mode" class="show-paragraphs btn btn-default btn-xs" href="#">Show ¶</a>
+					<a title="Click to hide end of line characters (¶)" class="hide-paragraphs btn btn-default btn-xs" href="#">Hide ¶</a>
+				</div>
+				<div class="col-sm-4 text-center">
+					<div class="id-to-copy">0001-0080-0040</div>
+				</div>
+				<div class="col-sm-4 text-right">
+					<button ng-show="item.comment == ''" class="btn btn-xs btn-default add-comment">
+						<span class="glyphicon glyphicon-plus"><!----></span> ADD COMMENT
+					</button>
+				</div>
+			</div>
+<!--			<input type="text" class="url form-control">-->
+		</div>
+		<!-- options-->
+		
+		<div class="comment-block-container" ng-controller="TranslationBlockController as block"><!--Comment block-->
+			<div class="comment-block comment readonly-modeXX" >
+				<div class="read-only-block" ng-show="item.comment != '' && block.editMode == false">
+					<div style="padding: 10px;border-bottom: 1px solid #dddddd;" class="content">
+						<div style="margin-left:10px;" class="pull-right">
+							<button class="edit-item btn-xs btn btn-primary" ng-click="block.edit()" type="button">
+								<span class="glyphicon glyphicon-pencil"><!----></span>
+							</button>
+						</div>
+						<span class="glyphicon glyphicon-info-sign"><!----></span>
+						<div class="translation-text text">{{item.comment}}</div>
+					</div>
+				</div>
+				
+				<form class="edit-form" ng-show="block.editMode == true" ng-submit="block.save('comment', item)">
+					<div style="border-bottom: 1px solid #dddddd;" class="content">
+						<h3 class="language-text">Comment</h3>
+						<textarea class="form-control editText" name="editText" ng-model="item.comment"></textarea>
+						<div class="action-bar">
+							<button class="cancel-item btn btn-danger btn-sm" ng-click="block.cancel()" type="submit">
+								<span class="glyphicon glyphicon-remove"><!----></span> CANCEL
+							</button>
+							<button class="save-item btn btn-success btn-sm" type="submit">
+								<span class="glyphicon glyphicon-save"><!----></span> SAVE THE COMMENT
+							</button>
+						</div>
+					</div>
+				</form>
+				
+				<form class="create-form" ng-show="false">
+					<h3 class="language-text">Comment of the new item</h3>
+					<textarea class="editText" name="editText">&lt;!--(new item text)--&gt;</textarea>
+					<div class="action-bar">
+						<button class="save-item btn btn-primary btn-sm" type="submit">SAVE THE NEW ITEM?</button>
+					</div>
+				</form>
+			</div>
+			<!--	.comment-block-->
+		</div>
+		<!-- comment-block-container-->
+		
+		<div class="tabs-container"><!--Tabs used to display only one read-only block-->
+			<ul class="tab-header nav nav-pills">
+				<li ng-repeat="language in currentItem.availableLanguages" class="language">
+					<a href="#" ng-click="switchLanguage(language)">{{language.alias}}</a>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="translation-blocks-container"><!--Read only and editable translation blocks-->
+			
+			<div class="translation-block" ng-repeat="translation in item.translations" ng-controller="TranslationBlockController as block">
+				
+				<div class="read-only-block" ng-hide="block.editMode">
+					<h3 class="language-text">{{item.getLanguage(translation.lang)}}</h3>
+					<div class="content">
+						<div class="translation-text text">
+							<span ng-show="translation.text == ''" class="text-danger"><i>(Empty)</i></span>
+							{{translation.text}}
+						</div>
+						<div class="action-bar text-right">
+							<button ng-click="block.edit(translation)" class="edit-item btn btn-default btn-sm" type="button">
+								<span class="glyphicon glyphicon-pencil"><!----></span> EDIT
+							</button>
+						</div>
+					</div>
+				</div>
+				<!--	read-only-block-->
+
+				<form class="edit-form" ng-show="block.editMode" ng-submit="block.save(translation, item)">
+					<h3 class="language-text">{{item.getLanguage(translation.lang)}}</h3>
+					<div class="content">
+						<textarea class="editText form-control" ng-model="translation.text" name="text"></textarea>
+						<div class="action-bar">
+							<button class="cancel-item btn btn-danger btn-sm" ng-click="block.cancel()" type="button">
+								<span class="glyphicon glyphicon-remove"><!----></span>	CANCEL
+							</button>
+							<button class="save-item btn btn-success btn-sm" type="submit">
+								<span class="glyphicon glyphicon-save"><!----></span>　SAVE
+							</button>
+						</div>
+					</div>
+				</form>
+				<!-- edit-form	-->				
+			</div>
+			<!--.translation-block-->
+			
+
+				
+			<form class="translation-block contenteditable-form" style="display: none;">
+				<p style="text-align: center; float: right;margin: 5px 10px;" class="instruction text-info">This is HTML content. Click on the text to edit.</p>
+				<h3 class="language-text">ENGLISH</h3>
+				<div class="content">
+					<div contenteditable="true" class="translation-text text">DELIVERY METHOD</div>
+					<div class="action-bar">
+						<button style="display:none;" class="save-item btn btn-success" type="submit"> SAVE</button>
+					</div>
+				</div>
+			</form>
+			<!-- contenteditable-form -->
+			
+			<form class="translation-block create-form" style="display: none;">
+				<h3><span class="language-text">ENGLISH</span> (new item)</h3>
+				<div class="content">
+					<textarea class="editText form-control" name="editText">?</textarea>
+					<div class="action-bar">
+						<button class="save-item btn btn-success" type="submit">
+							<span class="glyphicon glyphicon-save"><!----></span> SAVE THE NEW ITEM
+						</button>
+					</div>
+				</div>
+			</form>
+			<!--	create-form-->
+			
+		</div>
+	</div>
+</div>

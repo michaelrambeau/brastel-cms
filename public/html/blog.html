@@ -1,0 +1,33 @@
+<div ng-controller="BlogController" class="container">
+	
+	<div class="row">
+		<div class="col-sm-4">	
+			<h1>Message board</h1>
+			<p>
+				<select ng-model="language" ng-change="getPosts()" class="form-control" id="language" style="width: 200px;">
+					<option value="">Language</option>
+					<option ng-repeat="language in languages" value="{{language._id}}">{{language.text}}</option>
+				</select>				
+			</p>
+
+			<p>{{posts.length}} entries
+			<button type="button" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span>
+				CREATE
+			</button>
+			</p>
+	
+
+			<div class="list-group">
+				<a href="" class="list-group-item" ng-repeat="post in posts" ng-click="viewPost(post)" ng-class="{active: $stateParams.id == post._id }">
+					<p class="list-group-item-text">{{post.publishedDate | date}}</p>
+					<h4 class="list-group-heading-item">{{post.title}}</h4>
+					<!--<p class="list-group-item-text">{{post.body}}</p>-->
+				</a>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="ui-view"></div>
+		</div>
+	</div>
+</div>

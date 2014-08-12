@@ -1,0 +1,210 @@
+body{
+	overflow-y: scroll;
+}
+#my-menu.navbar-collapse{
+	padding:0;
+}
+h1{
+	margin-top:0;
+	font-size: 28px;
+}
+h2{
+	margin: 10px 0 10px;
+	font-size: 18px;
+}
+#search-engine{
+	margin-top: 5px;
+}
+#search-engine input{
+	width: 290px;
+}
+.highlight{
+	background-color:#FFBD24;
+	font-weight:bold;
+}
+.nb-items-info{
+	font-color: #777777;
+	text-align:center;
+}
+
+.dictionary h3{
+	font-size: 18px;
+}
+.scrollable-list{
+	position: relative;//because of scrollToElement() fucntion
+}
+.scrollable-list li{
+	padding-left: 10px;
+}
+.scrollable-list li{
+	margin: 2px 0;
+}
+.scrollable-list a{
+	padding-left: 2px;;
+}
+.scrollable-list .active{
+	background-color: #428BCA;
+	color: white;
+}
+.scrollable-list .active a{
+	color: white;
+	text-decoration: none;
+}
+.scrollable-list{
+	height: 500px;
+	overflow-y: scroll;	
+}
+.scrollable-list ul{
+	list-style: none;
+	padding: 0;
+}
+.scrollable-list .selected{
+	background-color: #428bca;
+}
+.scrollable-list .selected a,scrollable-list .selected a:hover{
+	color: white;
+}
+/*Put emphasis on elements that have just been added or removed.*/
+.scrollable-list .added{
+	font-weight: bold;
+	color: #3A8104;
+}
+.scrollable-list .removed{
+	font-weight: bold;
+	color: #990000
+}
+
+.dictionary .scrollable-list{
+	height: 500px;
+}
+.etext-item{
+/*	background-color: #EEECE5;*/
+}
+.options{
+	padding: 4px;
+	font-size: 12px;
+	text-align: right;
+	border-bottom: solid 1px #dddddd;
+}
+
+.translation-block h3{
+	margin: 0;
+	background-color: #F5F5F5;
+	padding: 5px 10px;
+	border-bottom: 1px solid #DDDDDD;
+	border-top: 1px solid #428BCA;
+	border-top: 1px solid #dddddd;
+	font-weight: normal;
+}
+.translation-block.edit-mode h3{
+	color: #428bca;
+	transition: 0.5s;
+}
+
+.comment-block-container{
+	/*border-bottom: solid 1px #dddddd;	*/
+}	
+.comment-block-container h3{
+	font-size:12px;
+	font-weight: normal;
+	margin: 0 0 5px;
+}
+.comment-block-container .translation-text{
+	display: inline;
+}
+.comment-block-container{
+	/*padding: 10px;*/
+	margin: 0;
+	background-color: #D9EDF7;
+	color: #31708f;
+}
+.comment-block-container .empty.readonly-mode{
+	display: none;
+}
+.comment-block-container .empty h3{
+	display: none;//to avoid display "comment" before the text (no comment)"
+}
+.empty .translation-text{
+	display: inline;
+}
+
+.translation-block{
+/*	padding-top: 10px;
+	border-top: 1px solid #DDDDDD;*/
+}
+.action-bar{
+	text-align: center;
+	margin-top: 10px;
+}
+.translation-block .content,.comment-block .content{
+	padding: 15px;
+}
+
+/*Tabs used to select a language*/
+.tabs-container{
+	/*margin-bottom: 10px;*/
+}
+.nav-pills li a{
+	padding: 2px 5px;
+	margin: 3px;
+	border: 1px solid #DDDDDD;
+}
+a.action2{
+	color: #777777;
+}
+.disabled{
+	opacity: 0.4;
+}
+.url{
+	margin: 5px 0;
+}
+
+#etext-items-block {
+    text-align: center;/*second column of the dictionary page*/
+}
+
+/*LOGIN FORM*/
+.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 50px auto;
+	background-color: #eee;	
+}
+
+/*etext items*/
+.panel-heading a{
+	/*color: white;*/
+}
+.end-of-line {
+	color: orange;
+}
+.translation-block.empty .text {
+color: #d9534f;
+}
+.comment-block.empty .text {
+	color: #76B2D0;
+}
+.id-to-copy{
+	padding: 2px 0;
+}
+.username{
+	margin-right: 10px;
+}
+.modal-sm {
+	width: 400px;//overrides bootstrap 300px
+}
+.table-layout{
+	display: table;
+}
+.table-layout > div{
+	display: table-cell;
+	vertical-align: top;
+}
+.select-style-block{
+	margin-bottom: 10px;
+}
+
+#etext-items-container .list-group-item-heading{
+	font-size: 14px;
+	text-align: center;
+}

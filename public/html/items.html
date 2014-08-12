@@ -1,0 +1,35 @@
+<div ng-controller="MainController" class="container">
+	<h1>Single translation items</h1>
+	<div class="row">
+		<div class="col-sm-3">
+			<h2>1. Select a category</h2>
+			<div class="panel panel-default">
+				<div class="panel-heading">{{categories.length}} categories</div>
+				<div class="scrollable-list">
+					<ul class="list-unstyled">
+						<li ng-repeat="category in categories"><a ng-click="viewCategory(category)" href="#">{{category.title}}</a></li>
+					</ul>
+				</div>
+				<div class="panel-footer">.</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<h2>2. Select an item</h2>
+			<div class="panel panel-default">
+				<div class="panel-heading">{{categoryItems.length}} items</div>
+				<div id="etext-items-container" class="scrollable-list">
+					<div class="list-group"><a ng-click="viewTranslation(item)" ng-class="{active: currentItem.index == item.index}" href ng-repeat="item in categoryItems" class="list-group-item">
+							<h4 class="list-group-item-heading">{{formatId(item)}}</h4>
+							<p class="list-group-item-text">{{truncateText(item)}}</p></a></div>
+				</div>
+				<div class="panel-footer">.</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<h2 class="disabled">3. Edit the translation items</h2>
+			<div id="etext-item-blocks-container">
+				<div ui-view></div>
+			</div>
+		</div>
+	</div>
+ </div>
