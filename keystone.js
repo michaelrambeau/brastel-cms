@@ -30,6 +30,27 @@ keystone.init({
 
 });
 
+keystone.set('languages',
+	 [
+    {
+			value: 'por',
+			label: 'Portuguese'
+		},
+		{
+			value: 'esp',
+		 	label: 'ESPAÑOL'
+		},
+		{
+			value: 'jpn',
+		 	label: '日本語'
+		},
+		{
+			value: 'eng',
+			label: 'English'
+		}
+	 ]
+)
+
 // Load your project's Models
 
 keystone.import('models');
@@ -44,6 +65,8 @@ keystone.set('locals', {
 	utils: keystone.utils,
 	editable: keystone.content.editable
 });
+
+
 
 // Load your project's Routes
 

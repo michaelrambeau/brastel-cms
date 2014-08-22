@@ -6,7 +6,10 @@ block content
 			p $state = {{$state.current.name}}
 			p $stateParams = {{$stateParams}}
 			
-	div(ui-view)
+	//div(ui-view)
+	div(ui-view="items", ng-show="$state.includes('items')")
+	div(ui-view="blog", ng-show="$state.includes('blog')")
+	div(ui-view="faq", ng-show="$state.includes('faq')")
 							
 								
 block js

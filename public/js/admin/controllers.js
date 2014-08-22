@@ -1,3 +1,42 @@
+app.factory('AllLanguages', ['$http', function ($http) {
+	return {
+		get: function(cb){
+			$http.get('/api/languages').success(function (data) {	
+				if(cb) cb(data);
+			});	
+		}
+	};
+}]);
+
+/*
+Language picker component used to select the language in BLOG and FAQ pages.
+*/
+
+app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', function(AllLanguages, $state, $stateParams) {
+	return {
+		restrict: "E",
+		templateUrl: "/html/directives/language-picker.html",
+		scope:{
+			state: '@'
+		},
+		controller: function($scope) {
+			AllLanguages.get(function (data) {
+				$scope.languages = data;
+				angular.forEach(data, function (element) {
+					if (element.value == $stateParams.language) $scope.currentLanguage = element;
+				});
+			});
+
+			$scope.setLanguage = function (language) {
+				$scope.currentLanguage = language;
+				$state.go($scope.state, {language: language.value});
+			};			
+
+		},
+		controllerAs: "languagePicker"
+	};
+}]);
+
 app.controller("MainController", function ($scope, $http, $location, $state, Languages) {
 	$scope.categories = [];//all categories (or formerly the "Page Groups")
 	$scope.categoryItems = [];//all items for the selected category
@@ -16,16 +55,13 @@ app.controller("MainController", function ($scope, $http, $location, $state, Lan
 	});
 	
 	$scope.viewCategory = function (category) {
-		console.info("currentCategory", category);
+		console.info("Go to category", category);
 		$scope.currentCategory = category;
-		$scope.loadTranslationList(category.id, 4);
+		//$scope.loadTranslationList(category.id, 4);
+		$state.go('items.list', { categoryId: category.id});
 	};
 	
-	$scope.loadTranslationList = function(category_id, language){
-		$http.get('/api/item-categories/' + category_id + '/?language=' + language).success(function (data) {
-			$scope.categoryItems = data;
-		});		
-	};
+
 	
 	$scope.viewTranslation = function (item) {
 		//item.category = $scope.getCategory(item);
@@ -34,7 +70,7 @@ app.controller("MainController", function ($scope, $http, $location, $state, Lan
 		console.info("currentItem", item);
 		//$scope.loadItemTranslation(item);
 		//before $location.path('/admin/items/' + item.cat + '/' + item.index);
-		$state.go('items.list', { categoryId: item.cat, index: item.index });
+		$state.go('items.list.detail', { categoryId: item.cat, index: item.index });
 	};
 	
 	$scope.loadItemTranslation = function (item) {
@@ -83,6 +119,21 @@ app.controller("MainController", function ($scope, $http, $location, $state, Lan
 	
 });//MainController
 
+app.controller('ItemCategoryListController', function ($scope, $http, $stateParams) {
+	var language = 4;
+	var cat = $stateParams.categoryId;
+	$scope.loading = true;
+	
+	$scope.loadTranslationList = function(category_id, language){
+		$http.get('/api/item-categories/' + category_id + '/?language=' + language).success(function (data) {
+			$scope.categoryItems = data;
+			$scope.loading = false;
+		});		
+	};	
+	
+	$scope.loadTranslationList(cat, language);
+});
+
 /*
  
 Etext Item 
@@ -103,7 +154,6 @@ app.controller("EtextItemController", function ($http, $routeParams, $stateParam
 			_this.comment = data.comment;
 			_this.categoryTitle = data.categoryTitle;
 			_this.translations = data.translations;
-			_this.initItemList();
 		});			
 	};	
 	
@@ -114,18 +164,6 @@ app.controller("EtextItemController", function ($http, $routeParams, $stateParam
 			if(languageId == element.acr) language = element;
 		});		
 		return language.text;
-	};
-	
-	this.initItemList = function(){
-		if(!$scope.$parent.currentCategory.id){
-			console.log("Load the item list");
-			$scope.loadTranslationList(_this.categoryId, 4);
-			return false;
-			var category = $scope.$parent.getCategory({
-				cat: _this.categoryId
-			});
-			$scope.$parent.viewCategory(category);
-		}		
 	};
 	
 	this.loadTranslations();
@@ -171,27 +209,32 @@ BLOG
 
 */
 
-app.controller("BlogController", function($http, $scope, $state){
+app.controller("BlogController", function($http, $scope, $state, $stateParams, AllLanguages){
+	_this = this;
 	console.info("BlogController start!");
-	$scope.languages = [];
+});
+
+app.controller("BlogListController", function ($scope, $stateParams, $state, $http) {
+	console.info("BlogListController start!");
 	$scope.posts = [];
 	
-	$scope.getLanguages = function () {
-		$http.get('/api/languages').success(function (data) {
-			$scope.languages = data;
-		});		
-	};
 	$scope.getPosts = function () {
 		$http.get('/api/blog/list/' + $scope.language).success(function (data) {
 			$scope.posts = data.posts;
 		});		
-	};
+	};	
 	$scope.viewPost = function(post){
-		$state.go('blog.post', {id: post._id})
+		$state.go('blog.list.post', {id: post._id})
 	};
-	$scope.getLanguages();
-
-});
+	
+	$scope.$on("update", function () {
+		console.info("update event!");
+		$scope.getPosts();
+	});
+	
+	$scope.language = $stateParams.language;
+	$scope.getPosts();
+})
 
 app.controller("PostController", function ($http, $stateParams, $scope){
 	console.info("PostController start!");
@@ -221,8 +264,9 @@ app.controller("PostController", function ($http, $stateParams, $scope){
 		$http.post('/api/blog/update/' + id, _this.data).success(function (data) {
 			$scope.editMode = true;
 			$scope.messages.saved = true;
-			
-	});			
+			$scope.$emit('update');//to update the parent scope (BlogList)
+			$scope.editMode = false;
+		});			
 	};
 	
 });
@@ -233,8 +277,70 @@ FAQ
 
 */
 
-app.controller("FAQController", function($http){
+app.controller("FAQController", function($scope, $state, $stateParams, AllLanguages){
 	console.info("FAQ start!");
+	AllLanguages.get(function (data) {
+		$scope.languages = data;
+		angular.forEach(data, function (element) {
+			if (element.value == $stateParams.language) $scope.currentLanguage = element;
+		});
+	});
+	
+	$scope.setLanguage = function (language) {
+		$scope.currentLanguage = language;		
+		$state.go('faq.list', {language: $scope.currentLanguage.value});
+	};	
+});
+
+app.controller("FAQListController", function ($scope, $stateParams, $state, $http) {
+	console.info("FAQListController start!");
+	$scope.faq = [];
+	
+	$scope.getFAQ = function () {
+		$http.get('/api/faq/list/' + $scope.language).success(function (data) {
+			$scope.faqs = data.faqs;
+		});		
+	};	
+	$scope.viewFAQ = function(faq){
+		$state.go('faq.list.entry', {id: faq._id})
+	};	
+	
+	$scope.language = $stateParams.language;
+	$scope.getFAQ();
+})
+
+app.controller("FAQEntryController", function ($http, $stateParams, $scope){
+	console.info("FAQEntrt controller start!");
+	this.data = null;
+	var _this = this;
+	$scope.loading = true;
+	$scope.editMode = false;
+	$scope.messages = {};
+	var id = $stateParams.id;
+	
+	$http.get('/api/faq/' + id).success(function (data) {
+		_this.data = data.faq;
+		$scope.loading = false;
+	});	
+	
+	
+	$scope.tinymceOptions = {
+		menubar: false
+	};	
+	
+	$scope.edit = function () {
+		console.log($scope.editMode);
+		$scope.editMode = true;
+	};
+	
+	$scope.save = function () {
+		$http.post('/api/faq/update/' + id, _this.data).success(function (data) {
+			$scope.editMode = true;
+			$scope.messages.saved = true;
+			
+	});			
+	};
+	
 });
 
 

@@ -80,7 +80,7 @@ angular.module('ui.tinymce', [])
   }]);
 
 
-var app = angular.module("app", ['ngRoute', 'ui.router', 'ui.tinymce', 'ngSanitize']);
+var app = angular.module("app", ['ngRoute', 'ui.router', 'ct.ui.router.extras', 'ui.tinymce', 'ngSanitize']);
 
 if (false) app.config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider) {
 	$routeProvider.
@@ -112,26 +112,70 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state('items', {
       url: "/items",
-      templateUrl: "html/items.html"
+      //templateUrl: "html/etext/items.html",
+			views:{
+				items: {
+					templateUrl: "html/etext/items.html"
+				}
+			},
+			deepStateRedirect: true,
+			sticky: true
     })
 		.state('items.list', {
-      url: "/:categoryId/:index",
-      templateUrl: "/html/etext-item.html"
+      url: "/:categoryId",
+      templateUrl: "html/etext/etext-list.html"
     })
+		.state('items.list.detail', {
+      url: "/:index",
+      templateUrl: "html/etext/etext-item.html"
+    })
+	
     .state('keywords', {
       url: "/keywords",
-      templateUrl: "html/keywords.html"
+      templateUrl: "html/keywords.html",
+			deepStateRedirect: true
     })
+	
 		.state('blog', {
       url: "/blog",
-      templateUrl: "html/blog.html"
+      //templateUrl: "html/blog/blog.html",
+			views:{
+				blog: {
+					templateUrl: "html/blog/blog.html"
+				}
+			},			
+			deepStateRedirect: true,
+			sticky: true
     })
-		.state('blog.post', {
+		.state('blog.list', {
+      url: "/:language",
+      templateUrl: "html/blog/blog-list.html",
+			controller: 'BlogListController'
+			
+    })
+		.state('blog.list.post', {
       url: "/:id",
-      templateUrl: "html/post.html"
+      templateUrl: "html/blog/post.html"
     })
+	
 		.state('faq', {
       url: "/faq",
-      templateUrl: "html/faq.html"
+      //templateUrl: "html/faq/faq.html",
+			views:{
+				faq: {
+					templateUrl: "html/faq/faq.html"
+				}
+			},				
+			deepStateRedirect: true,
+			sticky: true
     })
+		.state('faq.list', {
+      url: "/:language",
+      templateUrl: "html/faq/faq-list.html",
+			sticky: true
+    })
+		.state('faq.list.entry', {
+      url: "/:id",
+      templateUrl: "html/faq/faq-entry.html"
+    })	
 });

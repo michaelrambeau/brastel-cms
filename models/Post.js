@@ -7,13 +7,14 @@ var keystone = require('keystone'),
  */
 
 var Post = new keystone.List('Post', {
-	map: { name: 'title' },
-	autokey: { path: 'slug', from: 'title', unique: true }
+	map: { name: 'title' }
 });
+
 
 Post.add({
 	title: { type: String, required: true },
-	language: { type: Types.Relationship, ref: 'Language', many: false, initial: true },
+	//language: { type: Types.Relationship, ref: 'Language', many: false, initial: true },
+	language: { type: Types.Select, options: keystone.get('languages'), initial: true },
 	state: { type: Types.Select, options: 'draft, published, archived', default: 'draft', index: true },
 	author: { type: Types.Relationship, ref: 'User', index: true },
 	publishedDate: { type: Types.Date, index: true, dependsOn: { state: 'published' } },

@@ -1,0 +1,23 @@
+<div ng-controller="FAQController as faq" class="container">
+		<h1>FAQ {{currentLanguage.label}} </h1>
+	
+
+	<div class="row">
+		<div class="col-sm-4">
+			<p>
+				<language-picker state="faq.list"></language-picker>
+
+<!--
+				<button type="button" class="btn btn-primary">
+					<span class="glyphicon glyphicon-plus"></span>
+					CREATE A NEW FAQ
+				</button>
+-->
+			</p>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="ui-view"></div>
+	</div>
+</div>	

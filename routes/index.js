@@ -76,15 +76,21 @@ exports = module.exports = function(app) {
 	
 	
 
-	app.all('/api/:lang/faq', routes.api.faq);	
+	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
 	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	
 	app.get('/api/items/:category_id/:index', routes.api.items);	
 	app.get('/api/languages', routes.api.languages);
 	
+	//BLOG
 	app.get('/api/blog/list/:language', keystone.initAPI, routes.api.blog.list);
 	app.get('/api/blog/:id', keystone.initAPI, routes.api.blog.get);
 	app.post('/api/blog/update/:id', keystone.initAPI, routes.api.blog.update);
+	
+	//FAQ
+	app.get('/api/faq/list/:language', keystone.initAPI, routes.api.faq.list);
+	app.get('/api/faq/:id', keystone.initAPI, routes.api.faq.get);
+	//app.post('/api/blog/update/:id', keystone.initAPI, routes.api.blog.update);
 	
 	
 };

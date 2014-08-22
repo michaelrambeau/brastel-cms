@@ -8,11 +8,12 @@ var Keyword = new keystone.List('Keyword', {
 
 var fields={
 	category: { type: Types.Select, options: 'FAQCategory, BlogCategory, Country', index: true, initial: true },
+	position: { type: Types.Number, required: true,initial: true },
 	value: { type: String, required: true,initial: true },
 	text: { type: String, required: true, initial:true, multilingual: true },
 };
 
 Keyword.add(tools.addMultilingualPath(fields));
 
-Keyword.defaultColumns = 'category, value, text.eng';
+Keyword.defaultColumns = 'category, position, value, text.eng';
 Keyword.register();

@@ -1,0 +1,33 @@
+<div ng-controller="BlogController as blog" class="container">
+	
+
+	<h1>Message board {{currentLanguage.label}} </h1>
+	
+
+	<div class="row">
+		<div class="col-sm-6">
+			<p>
+				<language-picker state="blog.list"></language-picker>
+				
+<!--
+				<select ng-model="currentLanguage" ng-change="setLanguage()" class="form-control" style="width: auto;display: inline;" ng-options="language as language.label for language in languages">
+				</select>				
+-->
+
+<!--
+				<button type="button" class="btn btn-primary">
+					<span class="glyphicon glyphicon-plus"></span>
+					CREATE A NEW ENTRY
+				</button>
+-->
+			</p>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="ui-view"></div>
+	</div>
+
+		
+
+</div>

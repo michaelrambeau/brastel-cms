@@ -15,10 +15,12 @@ html
 
 		link(href="/styles/site.min.css", rel="stylesheet")
 		link(href="/styles/admin/cpanel.css", rel="stylesheet")
+		link(href="/styles/admin/admin.css", rel="stylesheet")
 		
-		script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.min.js")
+		script(src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.18/angular.js")
 		script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js")
 		script(src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js")
+		script(src="/js/lib/angular/ct-ui-router-extras.js")
 
 	//- HTML BODY
 	body(ng-app="app")
@@ -45,7 +47,8 @@ html
 								li(ng-class="{active: $state.includes('blog')}")
 									a(ui-sref="blog") Message Board 
 								li(ng-class="{active: $state.includes('faq')}")
-									a(ui-sref="faq") FAQs 									
+									//a(ui-sref="faq.list({language: 'eng'})") FAQ 									
+									a(ui-sref="faq") FAQ 									
 																
 																							
 						ul.nav.navbar-nav.navbar-right
@@ -61,6 +64,9 @@ html
 
 			//- The content block should contain the body of your template's content
 			block content
+			
+			//footer
+				| {{$state.current.name}}
 
 
 		//- JAVASCRIPT

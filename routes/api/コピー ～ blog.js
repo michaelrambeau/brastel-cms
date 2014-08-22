@@ -3,39 +3,38 @@
 var async = require('async'),
 	keystone = require('keystone');
  
-var FAQ = keystone.list('FAQ');
+var Post = keystone.list('Post');
 
 /**
- * List FAQ by language
+ * List Posts
  */
 exports.list = function(req, res) {
 	var language = req.params.language;
-	console.log("Get FAQ list", language);
-	FAQ.model.find({language: language})
-		.populate('category')
-		.sort({'category.position':1})
-		.exec( function(err, items) {
-			if (err) return res.apiError('database error', err);
-			res.apiResponse({
-				faqs: items
-			});
+	console.log("Get post list", language);
+	Post.model.find({language: language}, function(err, items) {
+		
+		if (err) return res.apiError('database error', err);
+		
+		res.apiResponse({
+			posts: items
+		});
 		
 	});
 }
  
 /**
- * Get FAQ by ID
+ * Get Post by ID
  */
 exports.get = function(req, res) {
 	var id = req.params.id;
-	console.log("Get 1 FAQ entry", id)
-	FAQ.model.findById(id).exec(function(err, item) {
+	console.log("Get 1 post", id)
+	Post.model.findById(id).exec(function(err, item) {
 		
 		if (err) return res.apiError('database error', err);
 		if (!item) return res.apiError('not found');
 		
 		res.apiResponse({
-			faq: item
+			post: item
 		});
 		
 	});

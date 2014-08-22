@@ -2,6 +2,10 @@ var list;
 var keystone = require('keystone');
 exports = module.exports = function (req, res) {
 	
+	var languages = keystone.get("languages");//defined in /keystone.js
+	res.json(languages);
+	return;
+	
 	cat = req.params.category_id;
 	index = req.params.index;
 	

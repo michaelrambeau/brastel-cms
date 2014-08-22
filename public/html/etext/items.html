@@ -1,0 +1,20 @@
+<div ng-controller="MainController" class="container">
+	<h1>Single translation items {{$state.current.name}}</h1>
+	<div class="row">
+		<div class="col-sm-3">
+			<h2>1. Select a category</h2>
+			<div class="panel panel-default">
+				<div class="panel-heading">{{categories.length}} categories</div>
+				<div class="scrollable-list">
+					<ul class="list-unstyled">
+						<li ng-repeat="category in categories"><a ng-click="viewCategory(category)" href="">{{category.title}}</a></li>
+					</ul>
+				</div>
+				<div class="panel-footer">.</div>
+			</div>
+		</div>
+		
+		<div ui-view></div>
+
+	</div>
+ </div>

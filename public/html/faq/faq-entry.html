@@ -1,0 +1,34 @@
+<div ng-controller="FAQEntryController as entry" >
+	<div class="alert alert-success" ng-show="messages.saved == true">The FAQ was saved!</div>
+
+	<div class="panel panel-default" ng-hide="loading">
+		<div class="panel-heading">{{entry.data.title}}</div>
+
+		<div class="panel-body" ng-show="editMode == false">
+			<p ng-bind-html="entry.data.body"></p>
+			<p class="text-right">
+				<button type="button" class="btn btn-primary" ng-click="edit()">EDIT</button>
+			</p>
+		</div>
+
+		<div class="panel-body" ng-show="editMode == true">
+			<form ng-submit="save()">
+				<div class="form-group">
+					<label class="control-label">FAQ title</label>
+					<input ng-model="entry.data.title" type="text" class="form-control" />
+				</div>	
+
+				<div class="form-group">
+					<label class="control-label">Post content</label>
+					<textarea ui-tinymce="tinymceOptions" ng-model="entry.data.body" style="height: 400px"></textarea>
+				</div>
+
+				<p class="text-right">
+					<button type="button" class="btn btn-default" ng-click="editMode = false">CANCEL</button>
+					<button type="submit" class="btn btn-primary">SAVE</button>
+				</p>	
+			</form>
+		</div>	
+	</div>
+	
+</div>
