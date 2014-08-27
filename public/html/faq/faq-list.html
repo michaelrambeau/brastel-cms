@@ -1,5 +1,6 @@
 	<div class="col-sm-4" ng-controller="FAQListController">
-		<div class="list-group scrollable">
+		<p ng-show="loading">Loading...</p>
+		<div class="list-group scrollable" ng-hide="loading">
 			<a href="" class="list-group-item" ng-repeat="faq in faqs | orderBy:['category.position', 'number']" ng-click="viewFAQ(faq)" ng-class="{active: $stateParams.id == faq._id }">
 				<p class="list-group-item-text">{{faq.category.text.eng}} - #{{faq.number}}</p>
 				<h4 class="list-group-heading-item">{{faq.title}}</h4>

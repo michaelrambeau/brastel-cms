@@ -1,5 +1,6 @@
 	<div class="col-sm-5">
-		<div class="list-group scrollable">
+		<p ng-show="loading">Loading...</p>
+		<div class="list-group scrollable" ng-hide="loading">
 			<a href="" class="list-group-item" ng-repeat="post in posts" ng-click="viewPost(post)" ng-class="{active: $stateParams.id == post._id }">
 				<p class="list-group-item-text">{{post.publishedDate | date}}</p>
 				<h4 class="list-group-heading-item">{{post.title}}</h4>

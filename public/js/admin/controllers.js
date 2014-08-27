@@ -1,15 +1,49 @@
+/*
+
+Application services
+
+*/
 app.factory('AllLanguages', ['$http', function ($http) {
+	//private attributes
+	var languages = [];//used to "cache" available languages
+	
+	function loadList(cb){
+		//Fetch available languages by ajax
+		$http.get('/api/languages').success(function (data) {	
+			languages = data;
+			if(cb) cb(data);
+		});	
+	}
+	
+	function getLanguage(value){
+		//Return a language object {value:'eng',label:'English'} from a language code.
+		var found = {};
+		angular.forEach(languages, function (element) {
+			if (element.value == value) found = element;
+		});
+		return found
+	}	
+	
+	//exposed API
 	return {
 		get: function(cb){
-			$http.get('/api/languages').success(function (data) {	
-				if(cb) cb(data);
-			});	
+			if(languages.length == 0){
+				loadList(cb);
+			}
+			else{
+				cb(languages);
+			}
+		},
+		getLanguage: function(value){
+			return getLanguage(value)
 		}
 	};
 }]);
 
 /*
+
 Language picker component used to select the language in BLOG and FAQ pages.
+
 */
 
 app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', function(AllLanguages, $state, $stateParams) {
@@ -17,7 +51,8 @@ app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', funct
 		restrict: "E",
 		templateUrl: "/html/directives/language-picker.html",
 		scope:{
-			state: '@'
+			state: '@',
+			currentLanguage: '=language'
 		},
 		controller: function($scope) {
 			AllLanguages.get(function (data) {
@@ -29,7 +64,7 @@ app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', funct
 
 			$scope.setLanguage = function (language) {
 				$scope.currentLanguage = language;
-				$state.go($scope.state, {language: language.value});
+				//$state.go($scope.state, {language: language.value});
 			};			
 
 		},
@@ -37,7 +72,28 @@ app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', funct
 	};
 }]);
 
-app.controller("MainController", function ($scope, $http, $location, $state, Languages) {
+/*
+
+Application controllers
+
+*/
+
+app.controller("MainController", function ($scope, AllLanguages, $state, $stateParams) {
+	console.info("MainController start!");
+	AllLanguages.get();
+	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
+		//console.log("$stateChangeStart event",toState, toParams);
+		console.log("Switch language", toParams.language);
+		var lang = toParams.language;
+		if (lang){
+			$scope.currentLanguage = AllLanguages.getLanguage(lang)
+		}
+	});	
+});
+		
+
+app.controller("EtextController", function ($scope, $http, $location, $state, Languages) {
+	console.info("EtextController start!");
 	$scope.categories = [];//all categories (or formerly the "Page Groups")
 	$scope.categoryItems = [];//all items for the selected category
 	$scope.currentCategory = {};
@@ -49,7 +105,7 @@ app.controller("MainController", function ($scope, $http, $location, $state, Lan
 	};
 	
 	$scope.allLanguages = Languages.get();
-	
+		
 	$http.get('/api/item-categories').success(function (data) {
 		$scope.categories = data;
 	});
@@ -219,8 +275,10 @@ app.controller("BlogListController", function ($scope, $stateParams, $state, $ht
 	$scope.posts = [];
 	
 	$scope.getPosts = function () {
+		$scope.loading = true;
 		$http.get('/api/blog/list/' + $scope.language).success(function (data) {
 			$scope.posts = data.posts;
+			$scope.loading = false;			
 		});		
 	};	
 	$scope.viewPost = function(post){
@@ -279,17 +337,7 @@ FAQ
 
 app.controller("FAQController", function($scope, $state, $stateParams, AllLanguages){
 	console.info("FAQ start!");
-	AllLanguages.get(function (data) {
-		$scope.languages = data;
-		angular.forEach(data, function (element) {
-			if (element.value == $stateParams.language) $scope.currentLanguage = element;
-		});
-	});
-	
-	$scope.setLanguage = function (language) {
-		$scope.currentLanguage = language;		
-		$state.go('faq.list', {language: $scope.currentLanguage.value});
-	};	
+
 });
 
 app.controller("FAQListController", function ($scope, $stateParams, $state, $http) {
@@ -297,8 +345,10 @@ app.controller("FAQListController", function ($scope, $stateParams, $state, $htt
 	$scope.faq = [];
 	
 	$scope.getFAQ = function () {
+		$scope.loading = true;
 		$http.get('/api/faq/list/' + $scope.language).success(function (data) {
 			$scope.faqs = data.faqs;
+			$scope.loading = false;
 		});		
 	};	
 	$scope.viewFAQ = function(faq){

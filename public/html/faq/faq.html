@@ -1,11 +1,10 @@
 <div ng-controller="FAQController as faq" class="container">
-		<h1>FAQ {{currentLanguage.label}} </h1>
+	<h1>FAQ <span class="label label-default">{{currentLanguage.label}}</span></h1>
 	
-
 	<div class="row">
 		<div class="col-sm-4">
 			<p>
-				<language-picker state="faq.list"></language-picker>
+				<language-picker state="faq.list" language="$tateParams.language"></language-picker>
 
 <!--
 				<button type="button" class="btn btn-primary">

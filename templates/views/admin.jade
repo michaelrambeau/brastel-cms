@@ -6,8 +6,15 @@ block content
 			p $state = {{$state.current.name}}
 			p $stateParams = {{$stateParams}}
 			
+	
+	//Option 1 : ui-router normal behaviour
+	//use only one ui-view directive		
 	//div(ui-view)
+	
+	//Option 2: ui-router "extra" features: "deep state redirect" and "sticky" states.
+	//use multiple ui-view directives
 	div(ui-view="items", ng-show="$state.includes('items')")
+	div(ui-view="keywords", ng-show="$state.includes('keywords')")
 	div(ui-view="blog", ng-show="$state.includes('blog')")
 	div(ui-view="faq", ng-show="$state.includes('faq')")
 							

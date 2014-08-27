@@ -2,3 +2,7 @@
 	max-height: 650px;
 	overflow-y: scroll;
 }
+h1 .label{
+	font-size: 50%;
+	vertical-align: middle;
+}

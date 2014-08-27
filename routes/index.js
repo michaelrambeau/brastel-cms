@@ -25,8 +25,8 @@ var _ = require('underscore'),
 
 // Common Middleware
 keystone.pre('routes', middleware.initLocals);
-//keystone.pre('render', middleware.flashMessages);
-keystone.pre('render', middleware.postProcessView);
+keystone.pre('render', middleware.flashMessages);
+//keystone.pre('render', middleware.postProcessView);
 
 // Import Route Controllers
 var routes = {
@@ -40,6 +40,23 @@ exports = module.exports = function(app) {
 	var express = keystone.express;
 	//var app = express();
 	var router = express.Router();
+	
+	app.all('/redirectme', function (req, res, next) {
+		console.log('/redirectme route - Redirection required for passport users', req.url);
+		var session = require('../node_modules/keystone/lib/session.js');
+		if (req.user) {
+			var cb = function () {
+				var urlFrom = req.session.urlFrom;
+				var url = urlFrom || '/admin';
+				console.log('----- The user has been authenticated, go to:', url, urlFrom);
+				res.redirect(url);
+			}
+			session.signinUser(req, res, req.user, cb);			
+		}
+		else{
+			next();	
+		}
+	});
 	
 	// Views
 	app.get('/', routes.views.index);
@@ -71,11 +88,9 @@ exports = module.exports = function(app) {
 	
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
 	 app.all('/admin*', middleware.requireUser);
-	 app.all('/admin', routes.views.admin);
-	 app.all('/admin/items/*', routes.views.admin);
+	 app.all('/admin*', routes.views.admin);
+	 
 	
-	
-
 	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
 	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	

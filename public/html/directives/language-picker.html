@@ -1,8 +1,10 @@
 <ul class="nav nav-pills">
 	<li ng-repeat="language in languages" ng-class="{active: currentLanguage == language}">
-		<a href="" ng-click="setLanguage(language)">{{language.value}}</a>
+<!--		<a href="" ng-click="setLanguage(language)">{{language.value}}</a>-->
+		<a href="" ui-sref="{{state}}({language: language.value})" ng-click="setLanguage(language)">{{language.value}}</a>
 	</li>
 </ul>
+
 <div class="alert alert-info" ng-show="!currentLanguage" style="margin-top: 10px;">
 	Select a language.
 </div>

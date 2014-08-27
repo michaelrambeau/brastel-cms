@@ -5,6 +5,11 @@ require('dotenv').load();
 // Require keystone
 var keystone = require('keystone');
 
+var session = require('./node_modules/keystone/lib/session.js');
+
+//Plugins
+var social = require('keystone-social-login');
+
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
@@ -28,6 +33,27 @@ keystone.init({
 	'user model': 'User',
 	'cookie secret': 'UiWW5hnkiRPGsyZBLtpRqJ24kd_Kgvz/_?~ol|y0bbC]^$wwET=M.9|pE?=vhB7['
 
+});
+
+//Set up social plugin
+social.config({
+    keystone: keystone,
+    providers: {
+        google: {
+            clientID: '896333975843-qa875lefjsdhnd9a9304sdhhkm236uid.apps.googleusercontent.com',
+            clientSecret: 'iQG_6K1dtluSqaueIAri8q5k'
+        }
+    },
+		'auto create user': true
+		/*onAuthenticate: function (req, accessToken, refreshToken, profile, done) {
+			
+		}*/
+		/*,onAuthenticate: function(req, accessToken, refreshToken, profile, user, cb){
+			console.log("postLogin callback");
+			session.signinUser(req, user, cb);
+		}*/
+		
+	
 });
 
 keystone.set('languages',
@@ -120,6 +146,10 @@ keystone.set('nav', {
 	'Keyword lists': 'Keyword'	
 });
 
-// Start Keystone to connect to your database and initialise the web server
 
+
+keystone.set('signin redirect', '/redirectme');
+social.start();
+
+// Start Keystone to connect to your database and initialise the web server
 keystone.start();

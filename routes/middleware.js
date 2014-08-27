@@ -14,6 +14,7 @@ var _ = require('underscore'),
 
 var cheerio = require('cheerio');
 var request = require('request');
+var urlModule = require('url');
 
 
 /**
@@ -25,7 +26,11 @@ var request = require('request');
 */
 
 exports.initLocals = function(req, res, next) {
-	
+	var previous = req.session.regenerate;
+	req.session.regenerate = function () {
+		console.log("--- before regeneration ---");//mike
+		return previous.apply(this, arguments);
+	}	
 	var locals = res.locals;
 	
 	locals.navLinks = [
@@ -36,8 +41,8 @@ exports.initLocals = function(req, res, next) {
 		{ label: 'How it works',		key: 'howitworks',		href: '/eng/howitworks' },
 		{ label: 'FAQ',		key: 'faq',		href: '/eng/faq' }		
 	];
-	
 	locals.user = req.user;
+	locals.authUser = req.session.auth;
 	
 	next();
 	
@@ -69,11 +74,15 @@ exports.flashMessages = function(req, res, next) {
  */
 
 exports.requireUser = function(req, res, next) {
-	
+	var url = urlModule.parse(req.originalUrl).path;
+	console.log('requiredUser in routes/middleware.js', req.user, req.originalUrl);
+	req.session.urlFrom = url;
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.');
-		res.redirect('/keystone/signin');
+		//res.redirect('/keystone/signin');
+		res.redirect('/social/login');//mike
 	} else {
+		res.locals.user = req.user;
 		next();
 	}
 	

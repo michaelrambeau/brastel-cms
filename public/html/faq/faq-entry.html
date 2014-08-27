@@ -1,5 +1,8 @@
 <div ng-controller="FAQEntryController as entry" >
+	
 	<div class="alert alert-success" ng-show="messages.saved == true">The FAQ was saved!</div>
+	
+	<p ng-show="loading">Loading...</p>
 
 	<div class="panel panel-default" ng-hide="loading">
 		<div class="panel-heading">{{entry.data.title}}</div>

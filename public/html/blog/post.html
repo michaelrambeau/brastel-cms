@@ -1,6 +1,8 @@
 <div ng-controller="PostController as post" >
 	<div class="alert alert-success" ng-show="messages.saved == true">The post was saved!</div>
-
+	
+	<p ng-show="loading">Loading...</p>
+	
 	<div class="panel panel-default" ng-hide="loading">
 		<div class="panel-heading">{{post.data.title}}</div>
 
