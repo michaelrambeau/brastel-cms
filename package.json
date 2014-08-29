@@ -1,6 +1,6 @@
 {
-  "name": "my-keystonejs-app-1",
-  "version": "0.0.0",
+  "name": "Brastel CMS application",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "keystone": "~0.2.22",
@@ -9,7 +9,8 @@
     "dotenv": "0.4.0",
     "passport": "^0.2.0",
     "passport-google-oauth": "^0.1.5",
-    "cheerio": "^0.17.0"
+    "cheerio": "^0.17.0",
+    "request": "^2.40.0"
   },
   "devDependencies": {
     "grunt": "~0.4.4",
