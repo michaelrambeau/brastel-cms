@@ -13,8 +13,8 @@ var provider = {
 		clientSecret:	'clientSecret'
 	},
 	options: {
-		clientID: '896333975843-qa875lefjsdhnd9a9304sdhhkm236uid.apps.googleusercontent.com',
-		clientSecret: process.env.GOOGLE_KEY,
+		clientID: process.env.GOOGLE_CLIENT_ID,
+		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		url: {
 			login: '/social/google/login',
 			callback: '/social/google/callback'		
