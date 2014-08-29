@@ -4,8 +4,8 @@ var keystone = require('keystone'),
 var ItemCategory = new keystone.List('ItemCategory');
 
 ItemCategory.add({
-	id: { type: String, required: true },
-	title: { type: String, required: true }
+	id: { type: String, required: true, initial: true },
+	title: { type: String, required: true, initial: true }
 });
 
 
