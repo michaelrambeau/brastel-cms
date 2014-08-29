@@ -55,7 +55,7 @@ html
 						.navbar-form.navbar-nav.navbar-right
 							if user
 								span.username= user.name.first + ' ' + user.name.last
-								a.btn.btn-danger(href='/keystone/signout') SIGN OUT
+								a.btn.btn-danger(href='/signout') SIGN OUT
 							else
 								li: a(href='/social/google/login') Sign In
 

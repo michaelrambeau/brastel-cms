@@ -79,7 +79,19 @@ exports.requireUser = function(req, res, next) {
 	req.session.urlFrom = url;
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.');
-		//res.redirect('/keystone/signin');
+		res.redirect('/keystone/signin');
+	} else {
+		res.locals.user = req.user;
+		next();
+	}
+	
+};
+exports.requireGoogleUser = function(req, res, next) {
+	var url = urlModule.parse(req.originalUrl).path;
+	console.log('requireGoogleUser in routes/middleware.js', req.user, req.originalUrl);
+	req.session.urlFrom = url;
+	if (!req.user) {
+		req.flash('error', 'Please sign in to access this page.');
 		res.redirect('/social/google/login');//mike
 	} else {
 		res.locals.user = req.user;

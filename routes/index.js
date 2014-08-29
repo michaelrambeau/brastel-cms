@@ -43,7 +43,6 @@ exports = module.exports = function(app) {
 	
 	app.all('/redirectme', function (req, res, next) {
 		console.log('/redirectme route - Redirection required for passport users', req.url);
-		var session = require('../node_modules/keystone/lib/session.js');
 		if (req.user) {
 			var cb = function () {
 				var urlFrom = req.session.urlFrom;
@@ -51,7 +50,7 @@ exports = module.exports = function(app) {
 				console.log('----- The user has been authenticated, go to:', url, urlFrom);
 				res.redirect(url);
 			}
-			session.signinUser(req, res, req.user, cb);			
+			signinUser(req, res, req.user, cb);			
 		}
 		else{
 			next();	
@@ -87,9 +86,9 @@ exports = module.exports = function(app) {
 	});
 	
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
-	 app.all('/admin*', middleware.requireUser);
+	 app.all('/admin*', middleware.requireGoogleUser);
 	 app.all('/admin*', routes.views.admin);
-	 
+	 app.all('/signout', adminSignout)
 	
 	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
@@ -109,3 +108,26 @@ exports = module.exports = function(app) {
 	
 	
 };
+
+function signinUser (req, res, user, onSuccess) {
+	var urlFrom = req.session.urlFrom;
+	req.session.regenerate(function() {
+		req.session.urlFrom = urlFrom;
+		req.user = user;
+		req.session.userId = user.id;
+		// if the user has a password set, store a persistence cookie to resume sessions
+		if (keystone.get('cookie signin')) {
+			var userToken = user.id + ':' + user.email;
+			res.cookie('keystone.uid', userToken, { signed: true, httpOnly: true });
+		}
+		onSuccess(user);
+	});	
+}
+
+function adminSignout (req, res) {
+	session = require('../node_modules/keystone/lib/session.js');
+	var cb = function () {
+		res.redirect('/');
+	};
+	session.signout(req, res, cb)
+}
