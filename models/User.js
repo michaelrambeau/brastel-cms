@@ -8,7 +8,7 @@ var keystone = require('keystone'),
 
 var User = new keystone.List('User');
 
-var social = require('keystone-social-login');
+//var social = require('keystone-social-login');
 
 User.add({
 	name: { type: Types.Name, required: true, index: true },
@@ -37,6 +37,6 @@ User.relationship({ ref: 'Post', path: 'author' });
 
 User.defaultColumns = 'name, email, isAdmin';
 
-social.plugin(User);
+//social.plugin(User);
 
 User.register();

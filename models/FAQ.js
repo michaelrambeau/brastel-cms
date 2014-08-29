@@ -1,4 +1,3 @@
-console.log("FAQ model... start!",__dirname);
 var keystone = require('keystone'),
 	Types = keystone.Field.Types;
 	tools = require('../multilingual');

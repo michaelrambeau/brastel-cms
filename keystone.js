@@ -2,13 +2,18 @@
 // customising the .env file in your project's root folder.
 require('dotenv').load();
 
+
 // Require keystone
 var keystone = require('keystone');
+
+var GoogleLogin = require('./googlelogin/class.js');
+
+
 
 var session = require('./node_modules/keystone/lib/session.js');
 
 //Plugins
-var social = require('keystone-social-login');
+//var social = require('keystone-social-login');
 
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
@@ -35,26 +40,36 @@ keystone.init({
 
 });
 
+var options = {
+	google: {
+		clientID: '896333975843-qa875lefjsdhnd9a9304sdhhkm236uid.apps.googleusercontent.com',
+		clientSecret: 'iQG_6K1dtluSqaueIAri8q5k'
+	},
+	signinUrl: '/social/google/login/',
+	autoCreateUser: 'true'
+};
+var google = new GoogleLogin (keystone, options);
 //Set up social plugin
-social.config({
-    keystone: keystone,
-    providers: {
-        google: {
-            clientID: '896333975843-qa875lefjsdhnd9a9304sdhhkm236uid.apps.googleusercontent.com',
-            clientSecret: 'iQG_6K1dtluSqaueIAri8q5k'
-        }
-    },
-		'auto create user': true
-		/*onAuthenticate: function (req, accessToken, refreshToken, profile, done) {
-			
-		}*/
-		/*,onAuthenticate: function(req, accessToken, refreshToken, profile, user, cb){
-			console.log("postLogin callback");
-			session.signinUser(req, user, cb);
-		}*/
-		
-	
+if (false) social.config({
+	keystone: keystone,
+	providers: {
+
+	},
+	'auto create user': true	
 });
+
+//Overwrite lib/plugin.js behaviour
+if (false) {
+	var originalPlugin = social.plugin;
+	social.plugin = function (list) {
+		//users authenticated from passport have no password.
+		var passwordField = list.schema.paths.password;
+		passwordField.options.required = false;
+		passwordField.isRequired = false;
+		originalPlugin.apply(this, arguments);
+	};
+	
+}
 
 keystone.set('languages',
 	 [
@@ -149,7 +164,8 @@ keystone.set('nav', {
 
 
 keystone.set('signin redirect', '/redirectme');
-social.start();
+if (false) social.start();
+google.start();
 
 // Start Keystone to connect to your database and initialise the web server
 keystone.start();
