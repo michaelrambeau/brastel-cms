@@ -74,7 +74,9 @@ exports = module.exports = function(app) {
 	});
 	
 	//Views
-	app.get('/', routes.views.index);	
+	app.get('/', function (req, res, next) {
+		res.redirect('/eng/home');
+	});	
 	
 	app.get('/blog/:category?', routes.views.blog);
 	app.get('/blog/post/:post', routes.views.post);
