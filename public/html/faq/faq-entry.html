@@ -17,12 +17,12 @@
 		<div class="panel-body" ng-show="editMode == true">
 			<form ng-submit="save()">
 				<div class="form-group">
-					<label class="control-label">FAQ title</label>
+					<label class="control-label">The question</label>
 					<input ng-model="entry.data.title" type="text" class="form-control" />
 				</div>	
 
 				<div class="form-group">
-					<label class="control-label">Post content</label>
+					<label class="control-label">The answer</label>
 					<textarea ui-tinymce="tinymceOptions" ng-model="entry.data.body" style="height: 400px"></textarea>
 				</div>
 

@@ -1,6 +1,7 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').load();
+var _ = require('underscore');
 
 
 // Require keystone
@@ -8,9 +9,6 @@ var keystone = require('keystone');
 
 var GoogleLogin = require('./googlelogin/class.js');
 
-
-
-var session = require('./node_modules/keystone/lib/session.js');
 
 //Plugins
 //var social = require('keystone-social-login');
@@ -21,8 +19,8 @@ var session = require('./node_modules/keystone/lib/session.js');
 
 keystone.init({
 
-	'name': 'My keystoneJS app 1',
-	'brand': 'My keystoneJS app 1',
+	'name': 'Brastel website',
+	'brand': 'brastel.com',
 
 	'less': 'public',
 	'static': 'public',
@@ -74,23 +72,38 @@ if (false) {
 keystone.set('languages',
 	 [
     {
+			number: 1,
 			value: 'por',
 			label: 'Portuguese'
 		},
 		{
+			number: 2,
 			value: 'esp',
 		 	label: 'ESPAÑOL'
 		},
 		{
+			number: 3,
 			value: 'jpn',
 		 	label: '日本語'
 		},
 		{
+			number: 4,
 			value: 'eng',
 			label: 'English'
 		}
 	 ]
-)
+);
+keystone.getLanguage = function (key) {
+	var languages = keystone.get('languages');
+	var result = {};
+	_.each(languages, function (language) {
+		if (key == language.number || key == language.value){
+			result = language;
+		}
+	});
+	return result;
+}
+
 
 // Load your project's Models
 
@@ -104,7 +117,8 @@ keystone.set('locals', {
 	_: require('underscore'),
 	env: keystone.get('env'),
 	utils: keystone.utils,
-	editable: keystone.content.editable
+	editable: keystone.content.editable,
+	languages: keystone.get('languages')
 });
 
 

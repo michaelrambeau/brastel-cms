@@ -26,7 +26,10 @@ var _ = require('underscore'),
 // Common Middleware
 keystone.pre('routes', middleware.initLocals);
 keystone.pre('render', middleware.flashMessages);
-//keystone.pre('render', middleware.postProcessView);
+
+keystone.pre('routes', middleware.parseBrastelUrl);
+keystone.pre('routes', middleware.multilingual);
+keystone.pre('render', middleware.postProcessView);
 
 // Import Route Controllers
 var routes = {
@@ -57,8 +60,22 @@ exports = module.exports = function(app) {
 		}
 	});
 	
-	// Views
-	app.get('/', routes.views.index);
+	
+	app.all('*', function (req, res, next){
+		if (res.locals.context){
+			console.log('Multilingual context detected')
+			var view = routes.views[res.locals.context.page];
+			if (view) {		
+				view(req, res, next);	
+				return;
+			}	
+		}
+		next();
+	});
+	
+	//Views
+	app.get('/', routes.views.index);	
+	
 	app.get('/blog/:category?', routes.views.blog);
 	app.get('/blog/post/:post', routes.views.post);
 	app.get('/gallery', routes.views.gallery);
@@ -74,16 +91,7 @@ exports = module.exports = function(app) {
 				routes.views.howitworks(req, res, next);
 		}
 	});
-	app.all(/^\/(eng|jpn)\/faq/i, function(req, res, next){
-		var re = /^\/(eng|jpn)/i;
- 		if(re.test(req.url)){
-        var language = re.exec(req.url)[1];
-				app.use(express.cookieSession());
-				req.session.language = language;
-				console.log("FAQ route", language);
-				routes.views.faq(req, res, next);
-		}
-	});
+
 	
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
 	 app.all('/admin*', middleware.requireGoogleUser);
@@ -93,7 +101,13 @@ exports = module.exports = function(app) {
 	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
 	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	
-	app.get('/api/items/:category_id/:index', routes.api.items);	
+	app.get('/api/items/:category_id/:index', routes.api.items);
+	
+	//used to get all translation items included in one page.
+	//2 URL parameters: items [{}] and language
+	app.get('/api/items', routes.api.getTranslations.apiRequest);
+	
+	
 	app.get('/api/languages', routes.api.languages);
 	
 	//BLOG

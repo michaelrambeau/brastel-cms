@@ -1,0 +1,9 @@
+//mixin used to insert an etext item inside a template
+//3 parameters:
+// - the category of the etext item
+// - the index of the item (the position inside the category)
+// - the default translation if no etext item is found.
+// This mixin used a translate() function atteached to res.locals object in middleware.js
+mixin translation(cat, index, defaultTranslation)
+	- translate({"cat": cat, "index": index})
+	span(data-translation=cat + "/" + index, cat=cat, index=index)= defaultTranslation

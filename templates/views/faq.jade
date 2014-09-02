@@ -1,20 +1,24 @@
 extends ../layouts/default
-
-mixin translation(cat, index, defaultTranslation)
-	- translate({cat: cat, index: index})
-	span(data-translation=cat + "/" + index, cat=cat, index=index)= defaultTranslation
 		
 block content
 	.container
-		h1=  templateData.title
-		p=  templateData.introduction
+		h1
+			+translation(153, 1, '<default title of the FAQ page>')
+		p
+			+translation(153, 2, '<default introduction of the FAQ page>')
+			
+			
 		
+		#acordion.panel-group
+			
+			each category in categories
+				h2= category.text
 		
-		- for (var i=1;i<27;i++)
-			p
-				//+translation(63, i, 'My default translation')
-				+translation(74, i, 'My default translation')
-		
-		
-		
-		
+				each faq in category.faqs
+					.panel.panel-default
+						.panel-heading
+							h4.panel-title
+								a(href='#' + category.value+'-'+faq.number,data-toggle='collapse', data-parent='#accordion')= faq.number + '. '+ faq.title
+						.panel-collapse.collapse(id=category.value+'-'+faq.number)
+							.panel-body
+								p!= faq.body

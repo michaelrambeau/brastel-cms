@@ -1,4 +1,5 @@
 include ../mixins/flash-messages
+include ../mixins/multilingual
 
 doctype html
 html
@@ -38,12 +39,11 @@ html
 	body
 
 		//- HEADER
-		#header: .container
-
+		#header
 			//- Customise your site's navigation by changing the navLinks Array in ./routes/middleware.js
 			//- ... or completely change this header to suit your design.
 
-			div(role="navigation").navbar.navbar-default
+			div(role="navigation").navbar.navbar-inverse
 				.container-fluid
 					.navbar-header
 						button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
@@ -51,17 +51,26 @@ html
 							span.icon-bar
 							span.icon-bar
 							span.icon-bar
-						a.navbar-brand(href='/') My keystoneJS app 1
+						a.navbar-brand(href='/') brastel.com
 					.collapse.navbar-collapse
 						ul.nav.navbar-nav.navbar-left
 							each link in navLinks
-								li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
+								li(class=(section == link.key ? 'active' : null)): a(href=getURL(link.key))= link.label
 						ul.nav.navbar-nav.navbar-right
+							li.dropdown
+								a.dropdown-toggle(href="#", data-toggle='dropdown')
+									| Language/言語
+									span.caret
+								ul.dropdown-menu
+									each language in languages
+										- var className = (language.value == context.language.value) ? 'disabled' : 'enabled'
+										li(class=className)
+											a(href=getURL(context.page, language.value))= language.label
 							if user
 								if user.canAccessKeystone
 									li: a(href='/keystone') Open Keystone
 								li: a(href='/keystone/signout')
-									= 'Sign Out' + user.googleLoginId
+									= 'Sign Out ' + user.name.first + ' ' + user.name.last
 							else
 								//li: a(href='/keystone/signin') Sign In
 								li: a(href='/social/google/login') Sign In
@@ -88,7 +97,7 @@ html
 		.container: #footer
 
 			//- You don't _have_ to include a link saying your site is powered by KeystoneJS, but we appreciate it!
-			p Powered by <a href="http://keystonejs.com" target="_blank">KeystoneJS</a>.
+			p The footer
 
 
 		//- JAVASCRIPT
