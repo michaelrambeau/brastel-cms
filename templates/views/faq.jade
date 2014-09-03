@@ -15,10 +15,11 @@ block content
 				h2= category.text
 		
 				each faq in category.faqs
+					- var faqID = category.value+'-'+faq.number
 					.panel.panel-default
 						.panel-heading
 							h4.panel-title
-								a(href='#' + category.value+'-'+faq.number,data-toggle='collapse', data-parent='#accordion')= faq.number + '. '+ faq.title
-						.panel-collapse.collapse(id=category.value+'-'+faq.number)
+								a(href='#' + faqID,data-toggle='collapse', data-parent='#accordion')= faq.number + '. '+ faq.title
+						.panel-collapse.collapse(id=faqID)
 							.panel-body
 								p!= faq.body

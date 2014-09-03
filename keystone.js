@@ -69,30 +69,7 @@ if (false) {
 	
 }
 
-keystone.set('languages',
-	 [
-    {
-			number: 1,
-			value: 'por',
-			label: 'Portuguese'
-		},
-		{
-			number: 2,
-			value: 'esp',
-		 	label: 'ESPAÑOL'
-		},
-		{
-			number: 3,
-			value: 'jpn',
-		 	label: '日本語'
-		},
-		{
-			number: 4,
-			value: 'eng',
-			label: 'English'
-		}
-	 ]
-);
+keystone.set('languages',require('./data/languages').languages);
 keystone.getLanguage = function (key) {
 	var languages = keystone.get('languages');
 	var result = {};

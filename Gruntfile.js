@@ -1,6 +1,6 @@
 'use strict()';
 
-var config= {
+var config = {
 	port: 3000
 };
 
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 			},
 			all: [ 'routes/**/*.js',
 						 'models/**/*.js'
-			],
+				],
 			server: [
 				'./keystone.js'
 			]

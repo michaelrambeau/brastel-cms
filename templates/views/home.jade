@@ -2,10 +2,29 @@ extends ../layouts/default
 
 block content
 	.container
-		h1 A simple page with 2 etext items
+		.col-sm-6
+		
+			h2
+				+translation(149, 1, '<default title>')
 
-		h2
-			+translation(149, 1, '<default title>')
-
-		p
-			+translation(149, 2, '<default paragraph>')
+			p
+				+translation(149, 2, '<default paragraph>')
+				
+			- for (var j=1; j<30; j++)	
+				p
+					+translation(53, j)
+				
+		.col-sm-6
+			h2 
+				+translation(73, 1, '<Message board>')
+			#accordion
+				- var i = 0
+				each post in posts
+					- i++
+					.panel.panel-default
+						.panel-heading
+							h4.panel-title
+								a(href='#post' + i, data-toggle='collapse', data-parent='#accordion')= post.title
+						.panel-collapse.collapse(id='post' + i)
+							.panel-body
+								p!= post.body			

@@ -1,49 +1,6 @@
-var keystone = require('keystone'),
-	async = require('async'),
-	request = require('request'),
-	_ = require('underscore');
+var keystone = require('keystone');
 
-
-
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
-		locals = res.locals;
-	
-	var language = req.session.language;
-	
-	locals.section = 'faq';
-	
-	view.on('init', function(next) {
-		
-		if (false) keystone.list('Keyword').model.find({category: 'FAQCategory'})
-			.sort({position: 1})
-			.exec(function (err, docs) {
-				if (err) throw err;
-				locals.categories = docs;
-				next();		
-			})
-						
-		if (true) keystone.list('FAQ').model.find({language: locals.context.language.value})
-			.populate('category')
-			.sort({'category.position':1})		
-			.exec(function (err, docs) {
-				if (err) throw err;
-				var faqs = sortByCategory(docs);
-				var categories = getCategories(faqs);
-				locals.categories = categories;
-				next();		
-			})
-		
-
-	});
-			
-	// Render the view
-	console.log("Render...");
-	view.render('faq');
-};
-
-function sortByCategory (faqs) {
+function sortByCategory(faqs) {
 	//sort by "FAQ Category position"...
 	var getPosition = function (faq) {
 		return faq.category.position;
@@ -61,28 +18,51 @@ function sortByCategory (faqs) {
 	return faqs;
 }
 
-function getCategories (faqs) {
+function getCategories (faqs, language) {
 	var key = '',
-			current = '',
-			categories = [];
+		current = '',
+		categories = [];
 	faqs.forEach(function (faq) {
 		key = faq.category.value;
 		var content = {
 			number: faq.number,
 			title: faq.title,
-			body: faq.body			
+			body: faq.body
 		};
-		if (key != current){
+		if (key !== current) {
 			current = key;
 			categories.push({
 				value: key,
-				text: faq.category.text.eng,
+				text: faq.category.text[language],
 				faqs: [content]
-			})
-		}
-		else {
+			});
+		} else {
 			categories[categories.length - 1].faqs.push(content);
-		}			
+		}	
 	});
 	return categories;
 }
+	
+module.exports = function(req, res) {
+	
+	var view = new keystone.View(req, res),
+		locals = res.locals;
+	
+	var language = req.session.language;
+	
+	locals.section = 'faq';
+	
+	view.on('init', function(next) {
+								
+		keystone.list('FAQ').model.find({language: locals.context.language.value})
+			.populate('category')
+			.exec(function (err, docs) {
+				if (err) throw err;
+				var faqs = sortByCategory(docs);
+				var categories = getCategories(faqs, language);
+				locals.categories = categories;
+				next();
+			});
+	});
+	view.render('faq');
+};
