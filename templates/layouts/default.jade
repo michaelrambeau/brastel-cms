@@ -1,6 +1,10 @@
 include ../mixins/flash-messages
 include ../mixins/multilingual
 
+//Variable to be overwritten by the templates
+- var footer = true
+block vars
+
 doctype html
 html
 
@@ -60,7 +64,7 @@ html
 							li.dropdown
 								a.dropdown-toggle(href="#", data-toggle='dropdown')
 									span.glyphicon.glyphicon-globe
-									|  Language/言語
+									|  Language/言語 
 									span.caret
 								ul.dropdown-menu
 									each language in languages
@@ -95,21 +99,22 @@ html
 
 
 		//- FOOTER
-		#footer: .container
-			p
-				+translation(53, 1, 'Customer service in')
-				|  
-				strong= context.language.label
-				
-			p
-				+translation(53, 4, 'Toll-free')
-				strong= context.language.customerService.tollfree
-				|  ・ 
-				+translation(53, 6, 'Toll-free')
-				strong= context.language.customerService.fromMobile
-				
-			p
-				+translation(53, 7, 'Business hours...')
+		if footer == true
+			#footer: .container
+				p
+					+translation(53, 1, 'Customer service in')
+					|  
+					strong= context.language.label
+
+				p
+					+translation(53, 4, 'Toll-free')
+					strong= context.language.customerService.tollfree
+					|  ・ 
+					+translation(53, 6, 'From mobiles')
+					strong= context.language.customerService.fromMobile
+
+				p
+					+translation(53, 7, 'Business hours...')
 
 			
 

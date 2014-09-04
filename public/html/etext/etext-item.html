@@ -81,17 +81,17 @@
 				</li>
 			</ul>
 		</div>
-		
+				
 		<div class="translation-blocks-container"><!--Read only and editable translation blocks-->
 			
-			<div class="translation-block" ng-repeat="translation in item.translations" ng-controller="TranslationBlockController as block">
+			<div class="translation-block" ng-repeat="(language, text) in item.translations" ng-controller="TranslationBlockController as block">
 				
 				<div class="read-only-block" ng-hide="block.editMode">
-					<h3 class="language-text">{{item.getLanguage(translation.lang)}}</h3>
+					<h3 class="language-text">{{item.getLanguage(language)}}</h3>
 					<div class="content">
 						<div class="translation-text text">
 							<span ng-show="translation.text == ''" class="text-danger"><i>(Empty)</i></span>
-							{{translation.text}}
+							{{text}}
 						</div>
 						<div class="action-bar text-right">
 							<button ng-click="block.edit(translation)" class="edit-item btn btn-default btn-sm" type="button">
@@ -103,7 +103,7 @@
 				<!--	read-only-block-->
 
 				<form class="edit-form" ng-show="block.editMode" ng-submit="block.save(translation, item)">
-					<h3 class="language-text">{{item.getLanguage(translation.lang)}}</h3>
+					<h3 class="language-text">{{item.getLanguage(language)}}</h3>
 					<div class="content">
 						<textarea class="editText form-control" ng-model="translation.text" name="text"></textarea>
 						<div class="action-bar">

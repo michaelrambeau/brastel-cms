@@ -4,31 +4,30 @@ exports = module.exports = function (req, res) {
 	
 	var category = req.params.category_id;
 	var language = req.param("language");
-	console.log(category);
 	
-	if (category == undefined) {
+	if (category === undefined) {
 		//Return all item categories
 		list = keystone.list('ItemCategory');
 		list.model.find({})
 			.sort({title: 1})
 			.exec(function(err, docs){
 				res.json(docs);			
-			})
+			});
 	}
 	
 	else {
 		//Return the list of items of a given category	
-		list = keystone.list('Item');
-		getItemList(parseInt(category), parseInt(language), function (docs) {
+		list = keystone.list('EtextItem');
+		getItemList(parseInt(category,10), language, function (docs) {
 			res.json(docs);
 		});
 	}
 	
-}
+};
 
 function getItemList(category, language, cb){
 	
-	list = keystone.list('Item');
+	list = keystone.list('EtextItem');
 	list.model.find({cat: category})
 		.sort({index: 1})
 		.exec(function(err, docs) {

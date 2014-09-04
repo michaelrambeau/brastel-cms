@@ -10,9 +10,6 @@ var keystone = require('keystone');
 var GoogleLogin = require('./googlelogin/class.js');
 
 
-//Plugins
-//var social = require('keystone-social-login');
-
 // Initialise Keystone with your project's configuration.
 // See http://keystonejs.com/guide/config for available options
 // and documentation.
@@ -39,35 +36,11 @@ keystone.init({
 });
 
 var options = {
-	google: {
-		clientID: '896333975843-qa875lefjsdhnd9a9304sdhhkm236uid.apps.googleusercontent.com',
-		clientSecret: 'iQG_6K1dtluSqaueIAri8q5k'
-	},
 	signinUrl: '/social/google/login/',
 	autoCreateUser: 'true'
 };
 var google = new GoogleLogin (keystone, options);
-//Set up social plugin
-if (false) social.config({
-	keystone: keystone,
-	providers: {
 
-	},
-	'auto create user': true	
-});
-
-//Overwrite lib/plugin.js behaviour
-if (false) {
-	var originalPlugin = social.plugin;
-	social.plugin = function (list) {
-		//users authenticated from passport have no password.
-		var passwordField = list.schema.paths.password;
-		passwordField.options.required = false;
-		passwordField.isRequired = false;
-		originalPlugin.apply(this, arguments);
-	};
-	
-}
 
 keystone.set('languages',require('./data/languages').languages);
 keystone.getLanguage = function (key) {
@@ -79,7 +52,7 @@ keystone.getLanguage = function (key) {
 		}
 	});
 	return result;
-}
+};
 
 
 // Load your project's Models
@@ -155,7 +128,7 @@ keystone.set('nav', {
 
 
 keystone.set('signin redirect', '/redirectme');
-if (false) social.start();
+
 google.start();
 
 // Start Keystone to connect to your database and initialise the web server

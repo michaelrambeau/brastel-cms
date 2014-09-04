@@ -65,7 +65,8 @@ module.exports = function(grunt) {
 					env: {
 						port: config.port
 					}
-				}
+				},
+				watch: '!public/**'
 			}
 		},
 

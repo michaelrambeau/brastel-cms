@@ -17,17 +17,17 @@ app.factory('AllLanguages', ['$http', function ($http) {
 	
 	function getLanguage(value){
 		//Return a language object {value:'eng',label:'English'} from a language code.
-		var found = {};
+		var found = null;
 		angular.forEach(languages, function (element) {
 			if (element.value == value) found = element;
 		});
-		return found
+		return found;
 	}	
 	
 	//exposed API
 	return {
 		get: function(cb){
-			if(languages.length == 0){
+			if(languages.length === 0){
 				loadList(cb);
 			}
 			else{
@@ -35,7 +35,7 @@ app.factory('AllLanguages', ['$http', function ($http) {
 			}
 		},
 		getLanguage: function(value){
-			return getLanguage(value)
+			return getLanguage(value);
 		}
 	};
 }]);
@@ -86,7 +86,7 @@ app.controller("MainController", function ($scope, AllLanguages, $state, $stateP
 		console.log("Switch language", toParams.language);
 		var lang = toParams.language;
 		if (lang){
-			$scope.currentLanguage = AllLanguages.getLanguage(lang)
+			$scope.currentLanguage = AllLanguages.getLanguage(lang);
 		}
 	});	
 });
@@ -139,9 +139,9 @@ app.controller("EtextController", function ($scope, $http, $location, $state, La
 		return "0001-" + addZeros(item.cat, 4) + "-" + addZeros(item.index,4);
 	};
 	
-	addZeros = function(x,nbDigit){
+	var addZeros = function(x,nbDigit){
 		//a private function to add "0" before numbers
-		var str = new String(x);
+		var str = '' + x;
 		str = "00000" + str;
     return str.substr(str.length - nbDigit,nbDigit);	
 	};
@@ -152,17 +152,8 @@ app.controller("EtextController", function ($scope, $http, $location, $state, La
 	
 	function truncate(source, limit){
 		return (source.length <= limit) ? source : source.substr(0, limit ) + " [...]";
-	};
-	
-	function getAvailableLanguages(item) {
-		var array = [];
-		var ids = item.category.languages;
-		$.each(ids, function (index,element) {
-			var language = getLanguage(element);
-			array.push(language);
-		});			
-		return array;
 	}
+	
 	$scope.getCategory = function(item){
 		//Return a "Category" object from a given item
 		var category = {};
@@ -170,13 +161,13 @@ app.controller("EtextController", function ($scope, $http, $location, $state, La
 			if(item.cat == element.id) category = element;
 		});		
 		return category;
-	}
+	};
 
 	
 });//MainController
 
 app.controller('ItemCategoryListController', function ($scope, $http, $stateParams) {
-	var language = 4;
+	var language = 'eng';
 	var cat = $stateParams.categoryId;
 	$scope.loading = true;
 	
@@ -196,30 +187,27 @@ Etext Item
  
  */
 
-app.controller("EtextItemController", function ($http, $routeParams, $stateParams, $scope, Languages) {
+app.controller("EtextItemController", function ($http, $routeParams, $stateParams, $scope, AllLanguages) {
 	//before this.categoryId = $routeParams.cat;
 	//before this.index = $routeParams.n;
 	this.categoryId = $stateParams.categoryId;
 	this.index = $stateParams.index;	
 	
-	_this=this;
+	var _this = this;
 	
 	this.loadTranslations = function () {
 		console.info("Load the translations...");
 		$http.get('/api/items/' + _this.categoryId + '/' + _this.index).success(function (data) {
 			_this.comment = data.comment;
 			_this.categoryTitle = data.categoryTitle;
-			_this.translations = data.translations;
+			_this.translations = data.text;
 		});			
 	};	
 	
 	this.getLanguage = function(languageId){
 		//Return a "Category" object form a given item
-		var language = {};
-		$.each(Languages.get(), function (index,element) {
-			if(languageId == element.acr) language = element;
-		});		
-		return language.text;
+		var language = AllLanguages.getLanguage(languageId);		
+		return (language) ? language.label : languageId;
 	};
 	
 	this.loadTranslations();
@@ -266,7 +254,7 @@ BLOG
 */
 
 app.controller("BlogController", function($http, $scope, $state, $stateParams, AllLanguages){
-	_this = this;
+	var _this = this;
 	console.info("BlogController start!");
 });
 
@@ -282,7 +270,7 @@ app.controller("BlogListController", function ($scope, $stateParams, $state, $ht
 		});		
 	};	
 	$scope.viewPost = function(post){
-		$state.go('blog.list.post', {id: post._id})
+		$state.go('blog.list.post', {id: post._id});
 	};
 	
 	$scope.$on("update", function () {
@@ -292,7 +280,7 @@ app.controller("BlogListController", function ($scope, $stateParams, $state, $ht
 	
 	$scope.language = $stateParams.language;
 	$scope.getPosts();
-})
+});
 
 app.controller("PostController", function ($http, $stateParams, $scope){
 	console.info("PostController start!");
@@ -352,12 +340,12 @@ app.controller("FAQListController", function ($scope, $stateParams, $state, $htt
 		});		
 	};	
 	$scope.viewFAQ = function(faq){
-		$state.go('faq.list.entry', {id: faq._id})
+		$state.go('faq.list.entry', {id: faq._id});
 	};	
 	
 	$scope.language = $stateParams.language;
 	$scope.getFAQ();
-})
+});
 
 app.controller("FAQEntryController", function ($http, $stateParams, $scope){
 	console.info("FAQEntrt controller start!");

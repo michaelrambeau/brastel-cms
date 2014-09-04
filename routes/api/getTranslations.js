@@ -4,14 +4,19 @@ function getListItemTranslation(items, language, cb) {
 	//Return the translations for an array of items {cat, index}, in a given language
 	
 	var docSearch = {"$or": items};
+
+	var fields = {
+		"cat": 1,
+		"index": 1
+	};
+	fields["text." + language] = 1;
+	
 	var array = {};
 	
-	var list = keystone.list('Item');
-	list.model.find(docSearch)
+	var list = keystone.list('EtextItem');
+	list.model.find(docSearch, fields)
 		.exec(function (err, docs) {
-			if (err) {
-				throw err;
-			}
+			if (err) throw(err);
 			docs.forEach(function (item) {
 				var text = item.getTranslation(language);
 				array[item.cat + "/" + item.index] = text;
@@ -20,6 +25,7 @@ function getListItemTranslation(items, language, cb) {
 			
 		});
 }
+
 
 module.exports.apiRequest = function (req, res) {
 
@@ -34,5 +40,4 @@ module.exports.apiRequest = function (req, res) {
 	
 };
 
-module.exports.getListItemTranslation = getListItemTranslation
-
+module.exports.getListItemTranslation = getListItemTranslation;

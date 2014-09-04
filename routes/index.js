@@ -34,7 +34,7 @@ keystone.pre('render', middleware.postProcessView);
 // Import Route Controllers
 var routes = {
 	views: importRoutes('./views'),
-	api: importRoutes('./api'),	
+	api: importRoutes('./api')	
 };
 
 // Setup Route Bindings
@@ -52,7 +52,7 @@ exports = module.exports = function(app) {
 				var url = urlFrom || '/admin';
 				console.log('----- The user has been authenticated, go to:', url, urlFrom);
 				res.redirect(url);
-			}
+			};
 			signinUser(req, res, req.user, cb);			
 		}
 		else{
@@ -63,7 +63,7 @@ exports = module.exports = function(app) {
 	
 	app.all('*', function (req, res, next){
 		if (res.locals.context){
-			console.log('Multilingual context detected')
+			console.log('Multilingual context detected');
 			var view = routes.views[res.locals.context.page];
 			if (view) {		
 				view(req, res, next);	
@@ -98,7 +98,7 @@ exports = module.exports = function(app) {
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
 	 app.all('/admin*', middleware.requireGoogleUser);
 	 app.all('/admin*', routes.views.admin);
-	 app.all('/signout', adminSignout)
+	 app.all('/signout', adminSignout);
 	
 	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
@@ -141,9 +141,9 @@ function signinUser (req, res, user, onSuccess) {
 }
 
 function adminSignout (req, res) {
-	session = require('../node_modules/keystone/lib/session.js');
+	var session = require('../node_modules/keystone/lib/session.js');
 	var cb = function () {
 		res.redirect('/');
 	};
-	session.signout(req, res, cb)
+	session.signout(req, res, cb);
 }

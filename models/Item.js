@@ -13,7 +13,6 @@ Item.add({
 Item.schema.methods.getTranslation = function (languageId) {
 	//From an item saved in the database, return the translation in the given language.
 	//Used by /api/translations/<category_id> call
-	console.log(this);
 	var array = this.toObject().translations;
 	var text = "";
 	var language = (languageId) ? languageId : 4;

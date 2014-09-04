@@ -1,23 +1,23 @@
 {
   "bitwise": true,
-  "camelcase": true,
+  "camelcase": false,
   "curly": false,  /* custom */
-  "eqeqeq": true,
+  "eqeqeq": false,
   "es3": true,
   "forin": true,
   "freeze": true,
   "immed": true,
   "indent": 1,  /* custom */
-  "latedef": true,
+  "latedef": false,
   "newcap": true,
   "noarg": true,
   "noempty": true,
   "nonbsp": true,
   "nonew": true,
   "plusplus": false,  /* custom */
-  "quotmark": true,
+  "quotmark": false,
   "undef": true,
-  "unused": true,
+  "unused": false,
   "strict": false, /* enable later */
   "trailing": true,
   "maxparams": false,
@@ -28,7 +28,7 @@
   "asi": false,
   "boss": true,  /* custom */
   "debug": false,
-  "eqnull": true,  /* custom */
+  "eqnull": false,  /* custom */
   "esnext": false,
   "evil": false,
   "expr": false,
@@ -60,6 +60,12 @@
     "before"     : false,
     "beforeEach" : false,
     "after"      : false,
-    "afterEach"  : false
+    "afterEach"  : false,
+		
+		"app": true,
+		"angular": true,
+		"$": true
+		
+		
   }
 }

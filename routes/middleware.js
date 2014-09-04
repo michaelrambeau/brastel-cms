@@ -9,7 +9,6 @@
  */
 
 var _ = require('underscore'),
-	querystring = require('querystring'),
 	keystone = require('keystone');
 
 var cheerio = require('cheerio');
@@ -28,14 +27,15 @@ var urlModule = require('url');
 exports.initLocals = function(req, res, next) {
 	var previous = req.session.regenerate;
 	req.session.regenerate = function () {
-		console.log("--- before regeneration ---");//mike
+		console.log('--- before regeneration ---');//mike
 		return previous.apply(this, arguments);
-	}	
+	};	
 	var locals = res.locals;
 	
 	locals.navLinks = [
 		{ label: 'Home',		key: 'home'},
-		{ label: 'FAQ',		key: 'faq'}		
+		{ label: 'FAQ',		key: 'faq'},	
+		{ label: 'About',		key: 'about'}		
 	];
 	locals.user = req.user;
 	locals.authUser = req.session.auth;
@@ -108,7 +108,7 @@ exports.parseBrastelUrl = function (req, res, next) {
 		var languageCode = array[1];
 		req.session.language = languageCode;
 		var language = keystone.getLanguage(languageCode);
-		var page = (array.length >1) ? array[2] : "";
+		var page = (array.length >1) ? array[2] : '';
 		res.locals.context = {
 			page: page,
 			language: language
@@ -116,7 +116,7 @@ exports.parseBrastelUrl = function (req, res, next) {
 	}
 
 	next();
-}
+};
 
 exports.multilingual = function (req, res, next) {
 		//initialize an empty array of etext items
@@ -138,51 +138,50 @@ exports.multilingual = function (req, res, next) {
 };
 
 
-
-
 exports.postProcessView = function(req, res, next) {
 	//from this Gist https://gist.github.com/mrlannigan/5051687
 	
-	
-	console.log("postProcessView middleware...");
+	//console.log('postProcessView middleware...');
   var render = res.render;
-  res.render = function(view, options, fn) {
+  res.render = function(view, opt, fn) {
     var self = this,
-      options = options || {},
+      options = opt || {},
       req = this.req,
       app = req.app,
       defaultFn;
  
     if ('function' == typeof options) {
-      fn = options, options = {};
+      fn = options;
+			options = {};
     }
  
     defaultFn = function(err, str){
       if (err) return req.next(err);
       self.send(str);
     };
- 
+		
     if ('function' != typeof fn) {
       fn = defaultFn;
     }
  		
     render.call(self, view, options, function(err, str) {
 			if (err) {
-				html = '<h2>Template error</h2><pre>' + err.toString() + '</pre>'
+				var html = '<h2>Template error</h2><pre>' + err.toString() + '</pre>';
 				res.status(500).send(html);
 				//TO BE DONE: find a way to sue the default error handler (in core/mount.js)default500Handler(err, req, res, next);
 				return;
 			}
 			var items = req.items;		
-			console.log("Overwriting render...", items);
-      if (items == undefined || items.length === 0) {
+			//console.log('Overwriting render...', items);
+      if (items === undefined || items.length === 0) {
 				//No item to translate in the page.
-				console.log("Nothing to translate!");
+				console.log('Nothing to translate in this page!');
 				self.send(str);
 			}
 			else {
 				var language = res.locals.context.language;
-				getTranslationsDirectCall(items, language.number, req, res, function(result){
+				
+				getTranslationsDirectCall(items, language.value, req, res, function(result){
 					var html = insertHtml(str, result);
 					self.send(html);	
 				});				
@@ -191,11 +190,11 @@ exports.postProcessView = function(req, res, next) {
   };
   next();
   
-}
+};
 
 function insertHtml(html, items){
 	//Insert translations inside HTML markup.
-	$ = cheerio.load(html);
+	var $ = cheerio.load(html);
 	var translations = $("[data-translation]");
 	
 	translations.each(function(index, element){
@@ -220,7 +219,7 @@ function getTranslationsFromAPI(items, language, req, res, cb){
 	var url = "http://localhost:3000/api/items";
 	if (!language) throw new Error ('Unable to get the current language!');
 	url += '?language=' + language.number;
-	url += '&items=' + JSON.stringify(items)
+	url += '&items=' + JSON.stringify(items);
 	console.log("Get all translations...", url);
 	request.get(url, function (error, response, body) {
 		if (error) throw error;
