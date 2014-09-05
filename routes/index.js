@@ -103,7 +103,11 @@ exports = module.exports = function(app) {
 	//app.all('/api/:lang/faq', routes.api.faq);	
 	app.get('/api/item-categories', routes.api.itemCategories);	
 	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	
-	app.get('/api/items/:category_id/:index', routes.api.items);
+
+	app.get('/api/items/:category_id/:index', routes.api.items.get);
+	app.put('/api/items/:category_id/:index', routes.api.items.put);
+
+
 	
 	//used to get all translation items included in one page.
 	//2 URL parameters: items [{}] and language

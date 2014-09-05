@@ -8,6 +8,7 @@ var _ = require('underscore');
 var keystone = require('keystone');
 
 var GoogleLogin = require('./googlelogin/class.js');
+var tools = require('./multilingual.js');
 
 
 // Initialise Keystone with your project's configuration.
@@ -56,8 +57,9 @@ keystone.getLanguage = function (key) {
 
 
 // Load your project's Models
-
+tools.start();
 keystone.import('models');
+
 
 // Setup common locals for your templates. The following are required for the
 // bundled templates and layouts. Any runtime locals (that should be set uniquely

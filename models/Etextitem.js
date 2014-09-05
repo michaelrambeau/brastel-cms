@@ -6,7 +6,8 @@ var EtextItem = new keystone.List('EtextItem');
 EtextItem.add({
 	cat: {type: Number, index: true},
 	index: {type: Number, index: true},
-	comment: { type: String}
+	comment: { type: String},
+	text: {type: Types.Html, multilingual: true}
 });
 
 EtextItem.schema.methods.getTranslation = function (language) {

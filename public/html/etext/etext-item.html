@@ -47,7 +47,7 @@
 					</div>
 				</div>
 				
-				<form class="edit-form" ng-show="block.editMode == true" ng-submit="block.save('comment', item)">
+				<form class="edit-form" ng-show="block.editMode == true" ng-submit="block.save('comment', item.comment, item)">
 					<div style="border-bottom: 1px solid #dddddd;" class="content">
 						<h3 class="language-text">Comment</h3>
 						<textarea class="form-control editText" name="editText" ng-model="item.comment"></textarea>
@@ -102,10 +102,10 @@
 				</div>
 				<!--	read-only-block-->
 
-				<form class="edit-form" ng-show="block.editMode" ng-submit="block.save(translation, item)">
+				<form class="edit-form" ng-show="block.editMode" ng-submit="block.save(language, text, item)">
 					<h3 class="language-text">{{item.getLanguage(language)}}</h3>
 					<div class="content">
-						<textarea class="editText form-control" ng-model="translation.text" name="text"></textarea>
+						<textarea class="editText form-control" ng-model="text"></textarea>
 						<div class="action-bar">
 							<button class="cancel-item btn btn-danger btn-sm" ng-click="block.cancel()" type="button">
 								<span class="glyphicon glyphicon-remove"><!----></span>	CANCEL

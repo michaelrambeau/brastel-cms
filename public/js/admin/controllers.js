@@ -229,14 +229,14 @@ app.controller("TranslationBlockController", function ($http) {
 	this.cancel = function (translation) {
 		this.editMode = false;
 	};
-	this.save = function (translation, item){
-		console.log(translation, item);
+	this.save = function (language, text, item){
+		console.log('save', language, item);
 		var data = {
-			text: (translation == "comment") ? item.comment : translation.text,
-			lang: (translation == "comment") ? "comment" : translation.lang
+			text: (language == "comment") ? item.comment : text,
+			language: (language == "comment") ? "comment" : language
 		};
 		
-		$http.put('/api/translations/' + item.categoryId + '/' +item.index, data).success(function (result) {
+		$http.put('/api/items/' + item.categoryId + '/' +item.index, data).success(function (result) {
 			console.info(result);
 			_this.editMode = false;
 		});				

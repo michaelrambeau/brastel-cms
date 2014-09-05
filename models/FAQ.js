@@ -1,6 +1,5 @@
 var keystone = require('keystone'),
 	Types = keystone.Field.Types;
-	tools = require('../multilingual');
 
 var FAQ = new keystone.List('FAQ', {
 	//map: { name: 'title.' + tools.defaultLanguage }
@@ -15,8 +14,7 @@ var fields = {
 	body:  {type: Types.Html, multilingual: false, wysiwyg: true, height: 200}
 };
 
-FAQ.add(tools.addMultilingualPath(fields));
+FAQ.add(fields);
 
-//FAQ.defaultColumns = 'number, category, title.' + tools.defaultLanguage;
 FAQ.defaultColumns = 'category, number, title';
 FAQ.register();
