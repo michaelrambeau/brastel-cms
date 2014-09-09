@@ -40,6 +40,15 @@ app.factory('AllLanguages', ['$http', function ($http) {
 	};
 }]);
 
+app.service('CurrentUser', ['$http', function ($http) {
+	return function() {
+		return {
+			name: 'mike',
+			languages: ['eng']
+		};
+	};
+}]);
+
 /*
 
 Language picker component used to select the language in BLOG and FAQ pages.
@@ -50,7 +59,7 @@ app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', funct
 	return {
 		restrict: "E",
 		templateUrl: "/html/directives/language-picker.html",
-		scope:{
+		scope: {
 			state: '@',
 			currentLanguage: '=language'
 		},
@@ -72,14 +81,17 @@ app.directive("languagePicker", ['AllLanguages', '$state', '$stateParams', funct
 	};
 }]);
 
+
+
 /*
 
 Application controllers
 
 */
 
-app.controller("MainController", function ($scope, AllLanguages, $state, $stateParams) {
+app.controller("MainController", function ($scope, AllLanguages, $state, $stateParams, CurrentUser) {
 	console.info("MainController start!");
+	$scope.currentUser = CurrentUser();
 	AllLanguages.get();
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 		//console.log("$stateChangeStart event",toState, toParams);
@@ -99,12 +111,9 @@ app.controller("EtextController", function ($scope, $http, $location, $state, La
 	$scope.currentCategory = {};
 	$scope.currentItem = {};
 	$scope.translations = [];
-	$scope.content = {
-		title : "My title",
-		body: "Body!"
-	};
 	
 	$scope.allLanguages = Languages.get();
+	$scope.selectedLanguages = ['eng', 'jpn'];
 		
 	$http.get('/api/item-categories').success(function (data) {
 		$scope.categories = data;
@@ -201,15 +210,25 @@ app.controller("EtextItemController", function ($http, $routeParams, $stateParam
 			_this.comment = data.comment;
 			_this.categoryTitle = data.categoryTitle;
 			_this.translations = data.text;
+			_this.languages = data.languages;
 		});			
 	};	
 	
 	this.getLanguage = function(languageId){
-		//Return a "Category" object form a given item
+		//Return a "Language object" {number, value, label} from a given language code ('eng' for example
 		var language = AllLanguages.getLanguage(languageId);		
 		return (language) ? language.label : languageId;
 	};
 	
+	this.switchLanguage = function (language) {
+		var index = $scope.selectedLanguages.indexOf(language);
+		if (index === -1){
+			$scope.selectedLanguages.push(language);
+		}	else {
+			$scope.selectedLanguages.splice(index,1);
+		}
+	};
+
 	this.loadTranslations();
 });
 
@@ -218,7 +237,7 @@ app.controller("EtextItemController", function ($http, $routeParams, $stateParam
 Translation block (one by language)
 
  */
-app.controller("TranslationBlockController", function ($http) {
+app.controller("TranslationBlockController", function ($scope, $http) {
 	console.log("TranslationBlockController");
 	this.editMode = false;
 	var _this = this;
@@ -226,11 +245,14 @@ app.controller("TranslationBlockController", function ($http) {
 		this.editMode = true;
 		console.log(translation);
 	};
+
 	this.cancel = function (translation) {
 		this.editMode = false;
 	};
-	this.save = function (language, text, item){
+
+	this.save = function (language, item){
 		console.log('save', language, item);
+		var text = item.translations[language];
 		var data = {
 			text: (language == "comment") ? item.comment : text,
 			language: (language == "comment") ? "comment" : language
@@ -241,6 +263,11 @@ app.controller("TranslationBlockController", function ($http) {
 			_this.editMode = false;
 		});				
 	};
+
+	this.canEdit = function (language) {
+		return $scope.currentUser.languages.indexOf(language) > -1;
+	};
+
 });
 
 app.controller("KeywordsController", function($http, $state){

@@ -54,7 +54,8 @@ html
 																							
 						.navbar-form.navbar-nav.navbar-right
 							if user
-								span.username= user.name.first + ' ' + user.name.last
+								- var lang = (user.languages) ? user.languages.join(',') : '';
+								span.username= user.name.first + ' ' + user.name.last + ' ' + lang
 								a.btn.btn-danger(href='/signout') SIGN OUT
 							else
 								li: a(href='/social/google/login') Sign In

@@ -7,7 +7,7 @@ exports = module.exports = function (req, res) {
 	
 	if (category === undefined) {
 		//Return all item categories
-		list = keystone.list('ItemCategory');
+		list = keystone.list('EtextCategory');
 		list.model.find({})
 			.sort({title: 1})
 			.exec(function(err, docs){

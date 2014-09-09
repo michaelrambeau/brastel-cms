@@ -18,6 +18,10 @@ User.add({
 	isAdmin: { type: Boolean, label: 'Can access Keystone', index: true }
 });
 
+User.schema.add({
+	languages: { type: [String] }
+});
+
 // Provide access to Keystone
 User.schema.virtual('canAccessKeystone').get(function() {
 	return this.isAdmin;

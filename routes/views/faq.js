@@ -1,5 +1,10 @@
 var keystone = require('keystone');
 
+/**
+Sort an array of FAQ by category and by number (inside the category)
+Cannot be done automatically bu MongoDB by using a sort() instruction because
+category data is retrieved with a populate() instruction.
+*/
 function sortByCategory(faqs) {
 	//sort by "FAQ Category position"...
 	var getPosition = function (faq) {
@@ -18,6 +23,10 @@ function sortByCategory(faqs) {
 	return faqs;
 }
 
+/**
+Return the array of FAQ categories sent to the browser.
+Each category contains an array of FAQ.
+*/
 function getCategories (faqs, language) {
 	var key = '',
 		current = '',
@@ -33,7 +42,7 @@ function getCategories (faqs, language) {
 			current = key;
 			categories.push({
 				value: key,
-				text: faq.category.text[language],
+				text: faq.toObject().category.text[language],
 				faqs: [content]
 			});
 		} else {

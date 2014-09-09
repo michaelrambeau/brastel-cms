@@ -11,15 +11,14 @@ var Post = keystone.list('Post');
 exports.list = function(req, res) {
 	var language = req.params.language;
 	console.log("Get post list", language);
-	Post.model.find({language: language}, function(err, items) {
-		
-		if (err) return res.apiError('database error', err);
-		
-		res.apiResponse({
-			posts: items
+	Post.model.find({language: language})
+		.sort({publishedDate: -1})
+		.exec(function(err, items) {
+			if (err) return res.apiError('database error', err);
+			res.apiResponse({
+				posts: items
+			});
 		});
-		
-	});
 }
  
 /**

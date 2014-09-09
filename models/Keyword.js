@@ -1,6 +1,5 @@
 var keystone = require('keystone'),		
-		Types = keystone.Field.Types,
-		tools = require('../multilingual');		
+		Types = keystone.Field.Types;
 
 var Keyword = new keystone.List('Keyword', {
 	map: { name: 'text.eng' }
