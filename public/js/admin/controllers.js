@@ -7,7 +7,7 @@ app.factory('AllLanguages', ['$http', function ($http) {
 	//private attributes
 	var languages = [];//used to "cache" available languages
 	
-	function loadList(cb){
+	function loadList(cb) {
 		//Fetch available languages by ajax
 		$http.get('/api/languages').success(function (data) {	
 			languages = data;
@@ -15,7 +15,7 @@ app.factory('AllLanguages', ['$http', function ($http) {
 		});	
 	}
 	
-	function getLanguage(value){
+	function getLanguage(value) {
 		//Return a language object {value:'eng',label:'English'} from a language code.
 		var found = null;
 		angular.forEach(languages, function (element) {
@@ -41,11 +41,10 @@ app.factory('AllLanguages', ['$http', function ($http) {
 }]);
 
 app.service('CurrentUser', ['$http', function ($http) {
-	return function() {
-		return {
-			name: 'mike',
-			languages: ['eng']
-		};
+	return function(cb) {
+		$http.get('/api/currentuser').success(function (data) {
+			cb(data);
+		});
 	};
 }]);
 
@@ -91,8 +90,13 @@ Application controllers
 
 app.controller("MainController", function ($scope, AllLanguages, $state, $stateParams, CurrentUser) {
 	console.info("MainController start!");
-	$scope.currentUser = CurrentUser();
+
+	CurrentUser(function (user) {
+		$scope.currentUser = user;
+	});
+
 	AllLanguages.get();
+
 	$scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 		//console.log("$stateChangeStart event",toState, toParams);
 		console.log("Switch language", toParams.language);
@@ -406,6 +410,101 @@ app.controller("FAQEntryController", function ($http, $stateParams, $scope){
 	});			
 	};
 	
+});
+
+/*
+
+USER VIEW
+
+*/
+app.controller('UserCtrl', function($http, AllLanguages) {
+	var _this = this;
+	AllLanguages.get(function(data) {
+		_this.languages = data;
+	});
+
+	var initCheckboxes = function() {
+		var array = _this.languages.map(function(element) {
+			return {
+				value: element.value,
+				label: element.label,
+				selected: false
+			};
+		});
+		console.log(array);
+		return array;
+	};
+
+	this.goToCreateForm = function() {
+		_this.newUser = {
+			email: '',
+			checkboxes: initCheckboxes()
+		};
+		_this.tab = 'create';
+	};
+
+
+	var loadUserList = function () {
+		_this.loading = true;
+		$http.get('/api/user').success(function (data) {
+			_this.users = data.users;
+			_this.loading = false;
+		});
+	};
+
+	this.edit = function (user) {
+		user.checkboxes = _this.languages.map(function (element) {
+			return {
+				value: element.value,
+				label: element.label,
+				selected: user.languages.indexOf(element.value) > -1
+			};
+		});
+		user.editMode = true;
+	};
+
+	this.cancel = function (user) {
+		user.editMode = false;
+	};
+
+	//Create a new user user {email, languages}
+	this.create = function (user) {
+		var data = {
+			email: user.email,
+			languages: getLanguagesFromCheckboxes(user.checkboxes)
+		};
+		console.log('Saving the new user', data);
+		$http.post('/api/user', data).success(function (result) {
+			_this.tab = '';
+			//Refresh the view
+			loadUserList();
+		});
+	};
+
+	var getLanguagesFromCheckboxes = function(checkboxes) {
+		var userLanguages = [];
+		angular.forEach(checkboxes, function (language) {
+			if (language.selected === true) userLanguages.push(language.value);
+		});
+		return userLanguages;
+	};
+
+	//Update languages field of an existing user
+	this.save = function (user) {
+		var userLanguages = getLanguagesFromCheckboxes(user.checkboxes);
+		console.log('Saving user languages...', userLanguages);
+		var data = {
+			languages: userLanguages
+		};
+		$http.put('/api/user/' + user._id, data).success(function (result) {
+			user.editMode = false;
+			//Refresh the view
+			loadUserList();
+		});
+	};
+
+	loadUserList();
+
 });
 
 

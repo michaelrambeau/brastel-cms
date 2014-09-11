@@ -17,6 +17,7 @@ block content
 	div(ui-view="keywords", ng-show="$state.includes('keywords')")
 	div(ui-view="blog", ng-show="$state.includes('blog')")
 	div(ui-view="faq", ng-show="$state.includes('faq')")
+	div(ui-view="user", ng-show="$state.includes('user')")
 							
 								
 block js
@@ -27,4 +28,3 @@ block js
 	script(src="/js/admin/app.js")
 	script(src="/js/admin/services.js")
 	script(src="/js/admin/controllers.js")
-		

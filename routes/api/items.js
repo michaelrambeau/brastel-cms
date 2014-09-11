@@ -15,10 +15,12 @@ module.exports.get = function (req, res) {
 	var list1 = keystone.list('EtextCategory');
 	list1.model.findOne({id: cat})
 		.exec(function(err, doc){
+			//step1: seach for the category to get the available languages fore the item.
 			if (err) throw err;
 			if (!doc) throw new Error('Unable to find the etext category ' + cat);
 			var languages = doc.toObject().languages;
 
+			//step2: get the etext item.
 			var list2 = keystone.list('EtextItem');
 			list2.model.findOne({cat: cat, index: index})
 				.exec(function(err, item){

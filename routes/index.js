@@ -104,9 +104,9 @@ exports = module.exports = function(app) {
 	app.get('/api/item-categories', routes.api.itemCategories);	
 	app.get('/api/item-categories/:category_id', routes.api.itemCategories);	
 
+	//Etext items
 	app.get('/api/items/:category_id/:index', routes.api.items.get);
 	app.put('/api/items/:category_id/:index', routes.api.items.put);
-
 
 	
 	//used to get all translation items included in one page.
@@ -114,6 +114,7 @@ exports = module.exports = function(app) {
 	app.get('/api/items', routes.api.getTranslations.apiRequest);
 	
 	
+	//Languages
 	app.get('/api/languages', routes.api.languages);
 	
 	//BLOG
@@ -126,6 +127,18 @@ exports = module.exports = function(app) {
 	app.get('/api/faq/:id', keystone.initAPI, routes.api.faq.get);
 	//app.post('/api/blog/update/:id', keystone.initAPI, routes.api.blog.update);
 	
+	//USERS
+	app.get('/api/currentuser', keystone.initAPI, function (req, res, next) {
+		if (req.user) {
+			res.apiResponse(req.user.toObject());
+		} else {
+			res.apiError('No user!');
+		}
+	});
+	app.get('/api/user', keystone.initAPI, routes.api.user.list);
+	app.put('/api/user/:id', keystone.initAPI, routes.api.user.save);
+	app.post('/api/user', keystone.initAPI, routes.api.user.create);
+
 	
 };
 

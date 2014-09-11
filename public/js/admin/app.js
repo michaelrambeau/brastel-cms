@@ -160,7 +160,6 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 	
 		.state('faq', {
       url: "/admin/faq",
-      //templateUrl: "html/faq/faq.html",
 			views:{
 				faq: {
 					templateUrl: "/html/faq/faq.html"
@@ -179,7 +178,18 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
 		.state('faq.list.entry', {
       url: "/:id",
       templateUrl: "/html/faq/faq-entry.html"
-    });
+    })
+
+		.state('user', {
+			url: '/admin/user',
+			views: {
+				user: {
+					templateUrl: '/html/user/index.html',
+				}
+			},
+			deepStateRedirect: true,
+			sticky: true
+		});
 	
 		$locationProvider.html5Mode(true);
 });

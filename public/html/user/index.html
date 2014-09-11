@@ -1,0 +1,89 @@
+<div class="container" ng-controller="UserCtrl as ctrl">
+<div class="row">
+
+
+	<div class="col-sm-9">
+		<h1>{{ctrl.users.length}} Users</h1>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Languages</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="user in ctrl.users">
+					<td>{{user.name.first}} {{user.name.last}}</td>
+					<td>{{user.email}}</td>
+					<td>
+
+						<!-- READ ONLY MODE -->
+						<div ng-hide="user.editMode == true">
+							{{user.languages.join(', ')}}
+							<button class="btn btn-xs btn-default" ng-click="ctrl.edit(user)" ng-hide="user.editMode == true" ng-switch="user.languages.length">
+								<span ng-switch-when="0">
+									<span class="glyphicon glyphicon-plus"></span>	ADD LANGUAGE
+								</span>
+								<span ng-switch-default>
+									<span class="glyphicon glyphicon-pencil"></span>	EDIT
+								</span>
+							</button>
+						</div>
+
+						<!-- EDIT MODE -->
+						<form ng-show="user.editMode == true">
+							<div class="checkbox" ng-repeat="language in user.checkboxes" >
+								<label>
+									<input type="checkbox" ng-model="language.selected" />
+									{{language.value}} ({{language.label}})
+								</label>
+							</div>
+
+							<button class="btn btn-default" ng-click="ctrl.cancel(user)" >CANCEL</button>
+							<button class="btn btn-success" ng-click="ctrl.save(user)">SAVE</button>
+						</form>
+
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+
+	<div class="col-sm-3">
+
+		<p ng-hide="ctrl.tab == 'create'">
+			<button class="btn btn-primary" ng-click="ctrl.goToCreateForm()">
+				<span class="glyphicon glyphicon-plus"></span>
+				CREATE A NEW USER
+			</button>
+		</p>
+
+		<div class="panel panel-default" ng-show="ctrl.tab == 'create'">
+			<div class="panel-heading">New Brastel user</div>
+			<div class="panel-body">
+				<form name="create" ng-submit="create.$valid && ctrl.create(ctrl.newUser)">
+					<div class="form-group">
+						<input type="email" ng-model="ctrl.newUser.email" placeholder="xyz@brastel.co.jp" class="form-control" required />
+					</div>
+					<div class="form-group">
+						<div class="checkbox" ng-repeat="language in ctrl.newUser.checkboxes" >
+							<label>
+								<input type="checkbox" ng-model="language.selected" />
+								{{language.value}} ({{language.label}})
+							</label>
+						</div>
+					</div>
+					<p class="text-center">
+						<button class="btn btn-default" type="button" ng-click="ctrl.tab = 'list'">CANCEL</button>
+						<button class="btn btn-primary" type="submit">SAVE</button>
+					</p>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div><!--.row	-->
+</div><!--.container-->

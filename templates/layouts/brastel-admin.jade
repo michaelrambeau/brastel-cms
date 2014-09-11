@@ -49,7 +49,9 @@ html
 									a(ui-sref="blog") Message Board 
 								li(ng-class="{active: $state.includes('faq')}")
 									//a(ui-sref="faq.list({language: 'eng'})") FAQ 									
-									a(ui-sref="faq") FAQ 									
+									a(ui-sref="faq") FAQ
+								li(ng-class="{active: $state.includes('user')}")
+									a(ui-sref="user") Users
 																
 																							
 						.navbar-form.navbar-nav.navbar-right
