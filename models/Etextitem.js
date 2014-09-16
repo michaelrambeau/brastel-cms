@@ -13,7 +13,8 @@ EtextItem.add({
 EtextItem.schema.methods.getTranslation = function (language) {
 	//From an item saved in the database, return the translation in the given language ('eng' for example).
 	//Used by /api/translations/<category_id> call
-	var translations = this.toObject().text;
+	var translations = this.text.toObject();
+	console.log(translations, language);
 	var text = translations[language] || '';
 	return text;	
 };

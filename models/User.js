@@ -15,7 +15,8 @@ User.add({
 	email: { type: Types.Email, initial: true, required: true, index: true },
 	password: { type: Types.Password, initial: true, required: false },
 	creationDate: {type: Types.Datetime},
-	lastUpdateDate: {type: Types.Datetime}
+	lastUpdateDate: {type: Types.Datetime},
+	googleLoginId: { type: String}
 }, 'Permissions', {
 	isAdmin: { type: Boolean, label: 'Can access Keystone', index: true }
 });

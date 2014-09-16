@@ -71,9 +71,9 @@ exports.flashMessages = function(req, res, next) {
  */
 
 exports.requireUser = function(req, res, next) {
-	var url = urlModule.parse(req.originalUrl).path;
-	console.log('requiredUser in routes/middleware.js', req.user, req.originalUrl);
-	req.session.urlFrom = url;
+	//var url = urlModule.parse(req.originalUrl).path;
+	//console.log('requiredUser in routes/middleware.js', url);
+	//req.session.urlFrom = url;
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.');
 		res.redirect('/keystone/signin');
@@ -85,7 +85,7 @@ exports.requireUser = function(req, res, next) {
 };
 exports.requireGoogleUser = function(req, res, next) {
 	var url = urlModule.parse(req.originalUrl).path;
-	console.log('requireGoogleUser in routes/middleware.js', req.user, req.originalUrl);
+	console.log('requireGoogleUser in routes/middleware.js, url saved in the session:', url);
 	req.session.urlFrom = url;
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.');

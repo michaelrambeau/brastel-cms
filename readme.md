@@ -18,13 +18,16 @@ An open-source node.js application that takes advantages of modern technogies an
 
 Features
 * Login with Google account
-* Etext items
-* Keyword
-* Blog entries
-* FAQ entries
+* Etext items management
+* Blog entries management (the "Message board")
+* FAQ entries management
+* User Management
 
 
 Technologies
-* node.js
-* mongoDB
-* KeystoneJS (a CMS built on top of node.js)
+* node.js web application built using KeystoneJS (a CMS built on top of node.js)
+* open-source code saved in GitHub.
+* Host: Heroku
+* database: mongoDB in the cloud (https://www.compose.io/)
+* templating engine: Jade
+* AngularJS for Administration pages ("Single Page Application" structure)

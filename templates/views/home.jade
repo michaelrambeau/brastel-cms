@@ -6,16 +6,9 @@ block content
 		
 			h2
 				+translation(149, 1, '<default title>')
-
 			p
 				+translation(149, 2, '<default paragraph>')
-				
-			//- for (var j=1; j<30; j++)	
-				p
-					+translation(53, j)
-		
-			img.img-responsive(src="/images/brastel-card.svg")		
-		
+			img.img-responsive(src="/images/brastel-card.svg")
 		.col-sm-6
 			h2 
 				+translation(73, 1, '<Message board>')
@@ -29,4 +22,4 @@ block content
 								a(href='#post' + i, data-toggle='collapse', data-parent='#accordion')= post.title
 						.panel-collapse.collapse(id='post' + i)
 							.panel-body
-								p!= post.body			
+								p!= post.body
